@@ -15,7 +15,7 @@ public class LoanDAO extends BaseDAO<Loan>{
 	}
 
 	public void addLoan(Loan loan) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
-		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?,?,?,?,?,?)", new Object[]{loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});
+		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?,?,?,curdate(),date_add(curdate(), INTERVAL 7 DAY),null)", new Object[]{loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo()});
 	}
 	
 	public void updateLoan(Loan loan) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
@@ -26,7 +26,8 @@ public class LoanDAO extends BaseDAO<Loan>{
 		save("DELETE FROM tbl_book_loans WHERE bookId = ? AND branchId = ? AND cardNo = ? AND dateOut = ?", new Object[]{loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(), loan.getDateOut()});
 	}
 
-	public List<Loan> readAllLoans() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Loan> readAllLoans(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("select * from tbl_book_loans", null);
 	}
 	

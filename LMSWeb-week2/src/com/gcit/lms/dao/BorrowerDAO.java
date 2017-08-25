@@ -56,7 +56,8 @@ public class BorrowerDAO extends BaseDAO<Borrower>{
 		save("DELETE FROM `library`.`tbl_borrower` WHERE cardNo = ?", new Object[] {borrower.getCardNo()});
 	}
 	
-	public List<Borrower> readAllBorrower() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Borrower> readAllBorrower(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_borrower`", null);
 	}
 }

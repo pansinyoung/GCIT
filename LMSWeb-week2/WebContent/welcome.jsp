@@ -3,19 +3,19 @@
 
 <div class="container theme-showcase" role="main">
 	
-	<div class="jumbotron">
+	<div class="jumbotron" style="background-color: #d9edf7!important;">
 		<h1 align="center">Welcome to GCIT</h1>
 		<h1 align="center">Library Management System</h1>
 	</div>
 	
 	<div class="page-header">
-		<h1>Please select your user category:</h1>
+		<h1 style="font-size: 24px!important;">Please select your user category:</h1>
 	</div>
 	
 	<div class="row">
 	
 		<div class = "col-sm-4" align="center">
-			<a href="administration.jsp">
+			<a href="administrationBook.jsp">
 				<button type="button" class="btn btn-lg btn-success" >
 					<h1>Administrater</h1>
 					<h3 align="left">Manage the databases:</h3>

@@ -52,7 +52,8 @@ public class GenreDAO extends BaseDAO<Genre>{
 		save("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre.getGenreId()});
 	}
 	
-	public List<Genre> readAllGenre() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Genre> readAllGenre(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_genre`", null);
 	}
 }

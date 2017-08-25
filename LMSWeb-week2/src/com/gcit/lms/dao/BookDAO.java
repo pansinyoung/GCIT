@@ -26,7 +26,8 @@ public class BookDAO extends BaseDAO<Book>{
 		save("delete from tbl_book where bookId = ?", new Object[]{book.getBookId()});
 	}
 
-	public List<Book> readAllBooks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Book> readAllBooks(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("select * from tbl_book", null);
 	}
 	

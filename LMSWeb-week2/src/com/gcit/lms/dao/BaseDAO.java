@@ -10,6 +10,25 @@ public abstract class BaseDAO<T> {
 	
 	protected Connection conn = null;
 	
+	private int pageNo = 1;
+	private int pageSize = 10;
+	
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
 	public BaseDAO(Connection connection) {
 		this.conn = connection;
 	}
@@ -26,6 +45,7 @@ public abstract class BaseDAO<T> {
 	}
 
 	public List<T> read(String sql, Object[] vals) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		sql+= " LIMIT "+(getPageNo()-1) * getPageSize()+" , "+getPageSize();
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		if(vals!=null) {
 			int count = 1;

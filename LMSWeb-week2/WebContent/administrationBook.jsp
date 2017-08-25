@@ -1,4 +1,13 @@
 <%@include file="include.html"%>
+<%@page import="com.gcit.lms.entity.*" %>
+<%@page import="com.gcit.lms.dao.*" %>
+<%@page import="com.gcit.lms.service.*" %>
+<%@page import="java.util.List" %>
+<%
+	BookDAO bdao = new BookDAO(new ConnectionUtil().getConnection());
+	List<Book> books = bdao.readAllBooks();
+	
+%>
 
 
 <div class="container theme-showcase" role="main">
@@ -144,6 +153,8 @@
 	
 	<!-- End Menu Block to the left side -->
 	
+	
+<!-- 	BooK Table on the right -->
 	<div class="col-lg-10" align="center">
 	
 		<table class="table table-striped">
@@ -153,6 +164,28 @@
 				<th>Edit</th>
 				<th>Delete</th>
 			</tr>
+<!-- 			<tr> -->
+<!-- 				<td>1</td> -->
+<!-- 				<td>asvc</td> -->
+<%-- 				<td><button class="btn btn-xs btn-primary" href="bookupdate.jsp?authorId=<%=a.getAuthorId()%>" data-toggle="modal" data-target="#editAuthorModal">Update</button></td> --%>
+<!-- 				<td><button class="btn btn-xs btn-primary">Delete</button></td> -->
+<!-- 			</tr> -->
+			<%
+ 				for (Book a : books) {
+ 			%> 
+			<tr>
+				<td><%=books.indexOf(a) + 1%></td>
+				<td><%=a.getTitle()%></td>
+				<td><button href="bookupdate.jsp?bookId=<%=a.getBookId()%>"
+						class="btn btn-sm btn-primary" data-toggle="modal"
+						data-target="#editAuthorModal">Edit</button></td>
+				<td><button
+						onclick="javascript:location.href='bookdelete?authorId=<%=a.getBookId()%>'"
+						class="btn btn-sm btn-danger">Delete</button></td>
+			</tr>
+			<%
+			}
+			%>
 		</table>
 
 		<nav aria-label="Page navigation">
@@ -168,7 +201,14 @@
 			</ul>
 		</nav>
 	</div>
-	
-	
-	
+	<!-- 	End BooK Table on the right -->
+		
+</div>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+	aria-labelledby="myLargeModalLabel" id="editAuthorModal">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+		</div>
+	</div>
 </div>

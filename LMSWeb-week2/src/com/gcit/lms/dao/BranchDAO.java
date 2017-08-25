@@ -56,7 +56,8 @@ public class BranchDAO extends BaseDAO<Branch>{
 		save("DELETE FROM `library`.`tbl_library_branch` WHERE branchId = ?", new Object[] {branch.getBranchId()});
 	}
 	
-	public List<Branch> readAllBranch() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Branch> readAllBranch(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_library_branch`", null);
 	}
 }

@@ -51,7 +51,8 @@ public class AuthorDAO extends BaseDAO<Author>{
 		save("DELETE FROM `library`.`tbl_author` WHERE authorId = ?", new Object[] {author.getAuthorId()});
 	}
 	
-	public List<Author> readAllAuthor() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Author> readAllAuthor(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_author`", null);
 	}
 }
