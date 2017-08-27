@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gcit.lms.entity.Author;
 import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Publisher;
 
@@ -37,6 +38,10 @@ public class BookDAO extends BaseDAO<Book>{
 	public List<Book> readAllBooks(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
 		setPageSize(pageSize);
+		return read("select * from tbl_book", null);
+	}
+	
+	public List<Book> readAllBooks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		return read("select * from tbl_book", null);
 	}
 	
@@ -141,5 +146,13 @@ public class BookDAO extends BaseDAO<Book>{
 		p.setBookId(id);
 		p.setTitle(rs.getString("title"));
 		return p;
+	}
+	
+	public List<Book> searchByAuthorId(int authorId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM tbl_book b JOIN tbl_book_authors ba ON ba.bookId = b.bookId WHERE ba.authorId = ?");
+		pstmt.setInt(1, authorId);
+		if(!pstmt.executeQuery().next())
+			return null;
+		return extractDataFirstLevel(pstmt.executeQuery());
 	}
 }

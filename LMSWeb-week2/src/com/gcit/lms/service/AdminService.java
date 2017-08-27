@@ -34,16 +34,36 @@ public class AdminService {
 		return 0;
 	}
 		
-	public void addUpdateAuthor(Author author) throws SQLException{
+	public int addUpdateAuthor(Author author) throws SQLException{
 		Connection conn = null;
+		int result=0;
 		try {
 			conn = connUtil.getConnection();
 			AuthorDAO adao = new AuthorDAO(conn);
 			if(author.getAuthorId()!=null){
 				adao.updateAuthor(author);
 			}else{
-				adao.addAuthor(author);
+				result = adao.addAuthor(author);
 			}
+			conn.commit();
+			return result;
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return 0;
+	}
+	
+	public void addBookAuthor(int bookId, String[] author) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookDAO bdao = new BookDAO(conn);
+			bdao.addBookAuthor(bookId, author);
 			conn.commit();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -56,12 +76,12 @@ public class AdminService {
 		
 	}
 	
-	public void addBookAuthor(int bookId, String[] author) throws SQLException{
+	public void addAuthorBook(int authorId, String[] book) throws SQLException{
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
-			BookDAO bdao = new BookDAO(conn);
-			bdao.addBookAuthor(bookId, author);
+			AuthorDAO adao = new AuthorDAO(conn);
+			adao.addAuthorBook(authorId, book);
 			conn.commit();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -115,6 +135,24 @@ public class AdminService {
 			conn = connUtil.getConnection();
 			BookDAO bdao = new BookDAO(conn);
 			bdao.updateBookAuthor(bookId, author);
+			conn.commit();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		
+	}
+	
+	public void updateAuthorBook(int authorId, String[] book) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			AuthorDAO bdao = new AuthorDAO(conn);
+			bdao.updateAuthorBook(authorId, book);
 			conn.commit();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -391,13 +429,30 @@ public class AdminService {
 		}
 		return null;
 	}
+	
+	public List<Book> readAllBook() throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookDAO bdao = new BookDAO(conn);
+			return bdao.readAllBooks();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
 		
-	public List<Author> readAllAuthor(int pageNo) throws SQLException{
+	public List<Author> readAllAuthor(int pageNo, int pageSize) throws SQLException{
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
 			AuthorDAO adao = new AuthorDAO(conn);
-			return adao.readAllAuthor(pageNo);
+			return adao.readAllAuthor(pageNo, pageSize);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			conn.rollback();
@@ -545,12 +600,46 @@ public class AdminService {
 		return 0;
 	}
 	
+	public Integer getAllCountAuthor() throws SQLException {
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			AuthorDAO adao = new AuthorDAO(conn);
+			return adao.getAllCount();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return 0;
+	}
+	
 	public List<Book> searchBook(String input, int pageNo, int pageSize) throws SQLException{
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
 			BookDAO bdao = new BookDAO(conn);
 			return bdao.getSearchResult(input, pageNo, pageSize);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
+	
+	public List<Author> searchAuthor(String input, int pageNo, int pageSize) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			AuthorDAO adao = new AuthorDAO(conn);
+			return adao.getSearchResult(input, pageNo, pageSize);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			conn.rollback();
@@ -578,6 +667,23 @@ public class AdminService {
 		}
 		return null;
 	}
+	
+	public Integer searchAuthorCount(String input, int pageNo, int pageSize) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			AuthorDAO adao = new AuthorDAO(conn);
+			return adao.getSearchCount(input);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
 
 	public List<Author> viewBookAuthors(Integer bookId) throws SQLException{
 		Connection conn = null;
@@ -585,6 +691,23 @@ public class AdminService {
 			conn = connUtil.getConnection();
 			AuthorDAO adao = new AuthorDAO(conn);
 			return adao.searchByBookId(bookId);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
+	
+	public List<Book> viewAuthorBooks(Integer authorId) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookDAO bdao = new BookDAO(conn);
+			return bdao.searchByAuthorId(authorId);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			conn.rollback();
@@ -653,6 +776,23 @@ public class AdminService {
 			conn = connUtil.getConnection();
 			BookDAO bdao = new BookDAO(conn);
 			return bdao.getById(bookId);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
+
+	public Author selectAuthorById(Integer authorId) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			AuthorDAO adao = new AuthorDAO(conn);
+			return adao.getById(authorId);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			conn.rollback();

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.lms.entity.Author;
+import com.gcit.lms.entity.*;
 
 public class AuthorDAO extends BaseDAO<Author>{
 
@@ -40,8 +40,12 @@ public class AuthorDAO extends BaseDAO<Author>{
 		return authors;
 	}
 
-	public void addAuthor(Author author) throws SQLException {
+	public Integer addAuthor(Author author) throws SQLException {
 		save("INSERT INTO `library`.`tbl_author` (authorName) VALUES (?)", new Object[] {author.getAuthorName()});
+		ResultSet rs = conn.prepareStatement("SELECT LAST_INSERT_ID()").executeQuery();
+		if(rs.next())
+			return rs.getInt(1);
+		return 0;
 	}
 	
 	public void updateAuthor(Author author) throws SQLException {
@@ -52,8 +56,9 @@ public class AuthorDAO extends BaseDAO<Author>{
 		save("DELETE FROM `library`.`tbl_author` WHERE authorId = ?", new Object[] {author.getAuthorId()});
 	}
 	
-	public List<Author> readAllAuthor(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Author> readAllAuthor(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return read("SELECT * FROM `library`.`tbl_author`", null);
 	}
 
@@ -67,5 +72,55 @@ public class AuthorDAO extends BaseDAO<Author>{
 		if(!pstmt.executeQuery().next())
 			return null;
 		return extractDataFirstLevel(pstmt.executeQuery());
+	}
+	
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(authorId) AS a FROM tbl_author");
+	}
+
+	public List<Author> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllAuthors(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_author WHERE authorName LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(authorId) FROM tbl_author WHERE authorName LIKE ?", input);
+	}
+	
+	public List<Author> readAllAuthors(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return read("select * from tbl_author", null);
+	}
+
+	public void addAuthorBook(int authorId, String[] books) throws NumberFormatException, SQLException {
+		for(String s: books) {
+			conn.prepareStatement("INSERT INTO tbl_book_authors VALUES (" + Integer.parseInt(s) + ", " + authorId + ");").executeUpdate();
+			System.out.println("INSERT INTO tbl_book_authors VALUES (" + Integer.parseInt(s) + ", " + authorId + ");");
+		}
+	}
+
+	public Author getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		ResultSet rs = getById("SELECT * FROM tbl_author WHERE authorId = ?", id);
+		if(!rs.next())
+			return null;
+		Author p = new Author();
+		p.setAuthorId(id);
+		p.setAuthorName(rs.getString("authorName"));
+		return p;
+	}
+
+	public void updateAuthorBook(int authorId, String[] book) throws SQLException {
+		conn.prepareStatement("DELETE FROM `library`.`tbl_book_authors` WHERE authorId= " + authorId + ";").executeUpdate();
+		for(String s: book) {
+			conn.prepareStatement("INSERT INTO tbl_book_authors VALUES (" + Integer.parseInt(s) + ", " + authorId + ");").executeUpdate();
+		}
 	}
 }
