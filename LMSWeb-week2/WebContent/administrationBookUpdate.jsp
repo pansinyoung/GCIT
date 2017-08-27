@@ -5,6 +5,7 @@
 <%@page import="com.gcit.lms.service.*"%>
 <%@page import="java.util.List"%>
 <%
+try{
 	AdminService adminService = new AdminService();
 	List<Book> books = new ArrayList<Book>();
 	int totalPages = 1;
@@ -36,6 +37,7 @@
 	} else {
 		totalPages = totalPages / pageSize;
 	}
+
 %>
 
 
@@ -58,7 +60,7 @@
 	</div>
 	<div class="col-md-6" align="right">
 		<form class="form-inline"
-			action="searchBooks?pageNo=<%=pageNo%>&pageSize=<%=pageSize%>"
+			action="searchBooksUpdate?pageNo=<%=pageNo%>&pageSize=<%=pageSize%>"
 			method="get">
 			<div class="row">
 				<div class="input-group">
@@ -218,6 +220,7 @@
 					<th style="text-align: center;">Author</th>
 					<th style="text-align: center;">Publisher</th>
 					<th style="text-align: center;">Genre</th>
+					<th style="text-align: center;">Update</th>
 					<!-- 					<th>Edit</th> -->
 					<!-- 					<th>Delete</th> -->
 				</tr>
@@ -228,9 +231,11 @@
 				<!-- 				<td><button class="btn btn-xs btn-primary">Delete</button></td> -->
 				<!-- 			</tr> -->
 				<%
+				try{
 					for (Book b : books) {
 						List<Author> authors = adminService.viewBookAuthors(b.getBookId());
-						List<Genre> genres = adminService.viewBookGenre(b.getBookId());
+						List<Genre> genres = adminService.viewBookGenre(b.getBookId());			
+				
 				%>
 				<tr>
 					<td><%=books.indexOf(b) + 1%></td>
@@ -296,9 +301,16 @@
 
 					<!-- 					<td><button class="btn btn-sm btn-primary" data-toggle="modal" -->
 					<!-- 							data-target="#editAuthorModal">Edit</button></td> -->
-					<!-- 					<td><button class="btn btn-sm btn-danger">Delete</button></td> -->
+<%-- 					<%session.setAttribute("bookId", b.getBookId()); %> --%>
+<%-- 					<%session.setAttribute("title", b.getTitle()); %> --%>
+					<td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#bookOps" 
+					href='bookupdate.jsp?bookId=<%=b.getBookId()%>' >Update</button></td>
 				</tr>
 				<%
+					}}catch(Exception e){
+						e.printStackTrace();
+					}finally{
+						
 					}
 				%>
 			</table>
@@ -310,7 +322,7 @@
 							if (pageNo != 1) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%> "
+						href="administrationBookUpdate?pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%> "
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 					<%
@@ -318,13 +330,13 @@
 							for (int i = 1; i <= totalPages; i++) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+						href="administrationBookUpdate?pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
 					<%
 						}
 							if (pageNo != totalPages) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
+						href="administrationBookUpdate?pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 					<%
@@ -333,7 +345,7 @@
 							if (pageNo != 1) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%>"
+						href="searchBooksUpdate?searchString=<%=searchString%>&pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 					<%
@@ -341,17 +353,19 @@
 							for (int i = 1; i <= totalPages; i++) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+						href="searchBooksUpdate?searchString=<%=searchString%>&pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
 					<%
 						}
 							if (pageNo != totalPages) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
+						href="searchBooksUpdate?searchString=<%=searchString%>&pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 					<%
 						}
+						}}catch(Exception e){
+							e.printStackTrace();
 						}
 					%>
 
@@ -368,3 +382,10 @@
 		<div class="modal-content"></div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$('#bookOps').on('hidden.bs.modal', function () {
+	$("#bookOps").removeData();
+});
+</script>
+

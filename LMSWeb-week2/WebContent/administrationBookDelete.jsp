@@ -58,7 +58,7 @@
 	</div>
 	<div class="col-md-6" align="right">
 		<form class="form-inline"
-			action="searchBooks?pageNo=<%=pageNo%>&pageSize=<%=pageSize%>"
+			action="searchBooksDelete?pageNo=<%=pageNo%>&pageSize=<%=pageSize%>"
 			method="get">
 			<div class="row">
 				<div class="input-group">
@@ -218,6 +218,7 @@
 					<th style="text-align: center;">Author</th>
 					<th style="text-align: center;">Publisher</th>
 					<th style="text-align: center;">Genre</th>
+					<th style="text-align: center;">Delete</th>
 					<!-- 					<th>Edit</th> -->
 					<!-- 					<th>Delete</th> -->
 				</tr>
@@ -296,7 +297,7 @@
 
 					<!-- 					<td><button class="btn btn-sm btn-primary" data-toggle="modal" -->
 					<!-- 							data-target="#editAuthorModal">Edit</button></td> -->
-					<!-- 					<td><button class="btn btn-sm btn-danger">Delete</button></td> -->
+					<td><button class="btn btn-sm btn-danger" onclick="javascript:location.href='administrationBookDelete?bookId=<%=b.getBookId()%>'">Delete</button></td>
 				</tr>
 				<%
 					}
@@ -310,7 +311,7 @@
 							if (pageNo != 1) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%> "
+						href="administrationBookDelete?pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%> "
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 					<%
@@ -318,13 +319,13 @@
 							for (int i = 1; i <= totalPages; i++) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+						href="administrationBookDelete?pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
 					<%
 						}
 							if (pageNo != totalPages) {
 					%>
 					<li><a
-						href="administrationBook?pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
+						href="administrationBookDelete?pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 					<%
@@ -333,7 +334,7 @@
 							if (pageNo != 1) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%>"
+						href="searchBooksDelete?searchString=<%=searchString%>&pageNo=<%=(pageNo - 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 					<%
@@ -341,13 +342,13 @@
 							for (int i = 1; i <= totalPages; i++) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+						href="searchBooksDelete?searchString=<%=searchString%>&pageNo=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
 					<%
 						}
 							if (pageNo != totalPages) {
 					%>
 					<li><a
-						href="searchBooks?searchString=<%=searchString%>&pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
+						href="searchBooksDelete?searchString=<%=searchString%>&pageNo=<%=(pageNo + 1)%>&pageSize=<%=pageSize%>"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 					<%
@@ -368,3 +369,4 @@
 		<div class="modal-content"></div>
 	</div>
 </div>
+

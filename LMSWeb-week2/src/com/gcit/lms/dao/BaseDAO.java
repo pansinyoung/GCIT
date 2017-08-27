@@ -39,6 +39,7 @@ public abstract class BaseDAO<T> {
 			int count = 1;
 			for(Object o: vals) {
 				pstmt.setObject(count, o);
+				count++;
 			}
 		}
 		pstmt.executeUpdate();
@@ -54,9 +55,21 @@ public abstract class BaseDAO<T> {
 			}
 		}
 		
-		return extractData(pstmt.executeQuery());
+		return extractDataFirstLevel(pstmt.executeQuery());
 	}
 
+	public List<T> readAll(String sql, Object[] vals) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		if(vals!=null) {
+			int count = 1;
+			for(Object o: vals) {
+				pstmt.setObject(count, o);
+			}
+		}
+		
+		return extractDataFirstLevel(pstmt.executeQuery());
+	}
+	
 	public abstract List<T> extractData(ResultSet rs) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 	
 	public List<T> readFirstLevel(String sql, Object[] vals) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
@@ -73,4 +86,34 @@ public abstract class BaseDAO<T> {
 
 	public abstract List<T> extractDataFirstLevel(ResultSet rs) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 	
+	public Integer getAllCount(String sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		return rs.getInt(1);
+	}
+
+	public List<T> search(String sql, String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		sql+= " LIMIT "+(getPageNo()-1) * getPageSize()+" , "+getPageSize() + ";";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, '%' + input + '%');
+		return extractDataFirstLevel(pstmt.executeQuery());
+	}
+	
+	public Integer searchCount(String sql, String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		PreparedStatement pstmt = conn.prepareStatement(sql + ";");
+		pstmt.setString(1, '%' + input + '%');
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		return rs.getInt(1);
+	}
+	
+	public ResultSet getById(String sql, Integer id) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		PreparedStatement preparedStatement = conn.prepareStatement(sql);
+		preparedStatement.setInt(1, id);
+		if(!preparedStatement.executeQuery().next())
+			return null;
+		return preparedStatement.executeQuery();
+	}
 }
+

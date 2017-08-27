@@ -1,6 +1,7 @@
 package com.gcit.lms.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -54,5 +55,17 @@ public class AuthorDAO extends BaseDAO<Author>{
 	public List<Author> readAllAuthor(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_author`", null);
+	}
+
+	public List<Author> readAllAuthor() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		return read("SELECT * FROM `library`.`tbl_author`", null);
+	}
+	
+	public List<Author> searchByBookId(int bookId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM tbl_author a JOIN tbl_book_authors ba ON ba.authorId = a.authorId WHERE ba.bookId = ?");
+		pstmt.setInt(1, bookId);
+		if(!pstmt.executeQuery().next())
+			return null;
+		return extractDataFirstLevel(pstmt.executeQuery());
 	}
 }

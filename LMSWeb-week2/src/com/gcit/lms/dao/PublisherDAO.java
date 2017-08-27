@@ -35,7 +35,7 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		List<Publisher> publishers = new ArrayList<>();
 		while(rs.next()) {
 			Publisher p = new Publisher();
-			p.setPublisherId(rs.getInt("pubId"));
+			p.setPublisherId(rs.getInt("publisherId"));
 			p.setPublisherName(rs.getString("publisherName"));
 			p.setPublisherAddr(rs.getString("publisherAddress"));
 			p.setPublisherPhone(rs.getString("publisherPhone"));
@@ -59,5 +59,21 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 	public List<Publisher> readAllPublisher(Integer pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
 		return read("SELECT * FROM `library`.`tbl_publisher`", null);
+	}
+
+	public List<Publisher> readAllPublisher() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		return read("SELECT * FROM `library`.`tbl_publisher`", null);
+	}
+
+	public Publisher getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		ResultSet rs = getById("SELECT * FROM tbl_publisher WHERE publisherId = ?", id);
+		if(!rs.next())
+			return null;
+		Publisher p = new Publisher();
+		p.setPublisherId(id);
+		p.setPublisherAddr(rs.getString("publisherAddress"));
+		p.setPublisherName(rs.getString("publisherName"));
+		p.setPublisherPhone(rs.getString("publisherPhone"));
+		return p;
 	}
 }
