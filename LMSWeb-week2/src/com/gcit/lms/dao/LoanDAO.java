@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Loan;
 
 public class LoanDAO extends BaseDAO<Loan>{
@@ -26,8 +27,9 @@ public class LoanDAO extends BaseDAO<Loan>{
 		save("DELETE FROM tbl_book_loans WHERE bookId = ? AND branchId = ? AND cardNo = ? AND dateOut = ?", new Object[]{loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(), loan.getDateOut()});
 	}
 
-	public List<Loan> readAllLoans(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Loan> readAllLoans(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return read("select * from tbl_book_loans", null);
 	}
 	
@@ -62,4 +64,24 @@ public class LoanDAO extends BaseDAO<Loan>{
 		return loans;
 	}
 
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(bookId, branchId, cardNo, dateOut) AS a FROM tbl_book_loans");
+	}
+
+	public List<Loan> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllLoans(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_book_loans WHERE dateOut LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(bookId, branchId, cardNo, dateOut) FROM tbl_book WHERE dateOut LIKE ?", input);
+	}
+	
 }

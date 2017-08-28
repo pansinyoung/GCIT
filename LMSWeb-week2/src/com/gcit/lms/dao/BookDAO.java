@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.lms.entity.Author;
-import com.gcit.lms.entity.Book;
-import com.gcit.lms.entity.Publisher;
+import com.gcit.lms.entity.*;
 
 public class BookDAO extends BaseDAO<Book>{
 
@@ -75,7 +73,7 @@ public class BookDAO extends BaseDAO<Book>{
 	}
 	
 	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return getAllCount("SELECT COUNT(BookId) AS a FROM tbl_book");
+		return getAllCount("SELECT COUNT(bookId) AS a FROM tbl_book");
 	}
 	
 	public List<Book> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -119,6 +117,13 @@ public class BookDAO extends BaseDAO<Book>{
 			conn.prepareStatement("INSERT INTO tbl_book_genres VALUES (" + Integer.parseInt(s) + ", " + bookId + ");").executeUpdate();
 		}
 	}
+	
+	public void addGenreBook(int genreId, String[] books) throws NumberFormatException, SQLException {
+		for(String s: books) {
+			if(!s.isEmpty())
+			conn.prepareStatement("INSERT INTO tbl_book_genres VALUES (" + genreId + ", " + Integer.parseInt(s) + ");").executeUpdate();
+		}
+	}
 
 	public void updateBookAuthor(int bookId, String[] author) throws SQLException {
 		conn.prepareStatement("DELETE FROM `library`.`tbl_book_authors` WHERE bookId= " + bookId + ";").executeUpdate();
@@ -137,6 +142,13 @@ public class BookDAO extends BaseDAO<Book>{
 			conn.prepareStatement("INSERT INTO tbl_book_genres VALUES (" + Integer.parseInt(s) + ", " + bookId + ");").executeUpdate();
 		}
 	}
+	
+	public void updateGenreBook(int genreId, String[] books) throws SQLException {
+		conn.prepareStatement("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = " + genreId + ";").executeUpdate();
+		for(String s: books) {
+			conn.prepareStatement("INSERT INTO tbl_book_genres VALUES (" + genreId + ", " + Integer.parseInt(s) + ");").executeUpdate();
+		}
+	}
 
 	public Book getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		ResultSet rs = getById("SELECT * FROM tbl_book WHERE bookId = ?", id);
@@ -151,6 +163,22 @@ public class BookDAO extends BaseDAO<Book>{
 	public List<Book> searchByAuthorId(int authorId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM tbl_book b JOIN tbl_book_authors ba ON ba.bookId = b.bookId WHERE ba.authorId = ?");
 		pstmt.setInt(1, authorId);
+		if(!pstmt.executeQuery().next())
+			return null;
+		return extractDataFirstLevel(pstmt.executeQuery());
+	}
+	
+	public List<Book> searchByPublisherId(int publisherId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM tbl_book WHERE pubId = ?");
+		pstmt.setInt(1, publisherId);
+		if(!pstmt.executeQuery().next())
+			return null;
+		return extractDataFirstLevel(pstmt.executeQuery());
+	}
+
+	public List<Book> searchByGenreId(int genreId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM tbl_book b JOIN tbl_book_genres ga ON ga.bookId = b.bookId WHERE ga.genre_id = ?");
+		pstmt.setInt(1, genreId);
 		if(!pstmt.executeQuery().next())
 			return null;
 		return extractDataFirstLevel(pstmt.executeQuery());

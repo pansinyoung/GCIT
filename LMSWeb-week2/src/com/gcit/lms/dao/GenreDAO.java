@@ -41,8 +41,12 @@ public class GenreDAO extends BaseDAO<Genre>{
 		return genres;
 	}
 
-	public void addGenre(Genre genre) throws SQLException {
+	public int addGenre(Genre genre) throws SQLException {
 		save("INSERT INTO `library`.`tbl_genre` (genre_name) VALUES (?)", new Object[] {genre.getGenre_name()});
+		ResultSet rs = conn.prepareStatement("SELECT LAST_INSERT_ID()").executeQuery();
+		if(rs.next())
+			return rs.getInt(1);
+		return 0;
 	}
 	
 	public void updateGenre(Genre genre) throws SQLException {
@@ -50,11 +54,13 @@ public class GenreDAO extends BaseDAO<Genre>{
 	}
 	
 	public void deleteGenre(Genre genre) throws SQLException {
+		save("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genre.getGenreId()});
 		save("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre.getGenreId()});
 	}
 	
-	public List<Genre> readAllGenre(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Genre> readAllGenre(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return read("SELECT * FROM `library`.`tbl_genre`", null);
 	}
 	
@@ -70,4 +76,33 @@ public class GenreDAO extends BaseDAO<Genre>{
 		return extractDataFirstLevel(pstmt.executeQuery());
 	}
 
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(genre_id) AS a FROM tbl_genre");
+	}
+	
+	public List<Genre> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllGenre(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_genre WHERE genre_name LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(genre_id) FROM tbl_genre WHERE genre_name LIKE ?", input);
+	}
+
+	public Genre getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		ResultSet rs = getById("SELECT * FROM tbl_genre WHERE genre_id = ?", id);
+		if(!rs.next())
+			return null;
+		Genre p = new Genre();
+		p.setGenreId(id);
+		p.setGenreName(rs.getString("genre_name"));
+		return p;
+	}
 }

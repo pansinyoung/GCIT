@@ -37,7 +37,7 @@
 		
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-info"type="submit" >Update Book</button>
+		<button class="btn btn-info"type="submit" >Update Author</button>
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>
 </form>

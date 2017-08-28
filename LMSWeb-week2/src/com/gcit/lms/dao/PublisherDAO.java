@@ -53,17 +53,20 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 	}
 	
 	public void deletePublisher(Publisher publisher) throws SQLException {
+		save("UPDATE `library`.`tbl_book` SET pubId = NULL WHERE pubId = ?", new Object[] {publisher.getPublisherId()} );
 		save("DELETE FROM `library`.`tbl_publisher` WHERE publisherId = ?", new Object[] {publisher.getPublisherId()});
 	}
 	
-	public List<Publisher> readAllPublisher(Integer pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Publisher> readAllPublisher(Integer pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return read("SELECT * FROM `library`.`tbl_publisher`", null);
 	}
 
 	public List<Publisher> readAllPublisher() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		return read("SELECT * FROM `library`.`tbl_publisher`", null);
 	}
+
 
 	public Publisher getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		ResultSet rs = getById("SELECT * FROM tbl_publisher WHERE publisherId = ?", id);
@@ -75,5 +78,25 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		p.setPublisherName(rs.getString("publisherName"));
 		p.setPublisherPhone(rs.getString("publisherPhone"));
 		return p;
+	}
+
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(publisherId) AS a FROM tbl_publisher");
+	}
+	
+	public List<Publisher> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllPublisher(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_publisher WHERE publisherName LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(publisherId) FROM tbl_publisher WHERE publisherName LIKE ?", input);
 	}
 }

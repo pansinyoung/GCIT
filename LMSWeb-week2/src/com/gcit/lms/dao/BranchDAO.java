@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.lms.entity.Branch;
+import com.gcit.lms.entity.*;
 
 public class BranchDAO extends BaseDAO<Branch>{
 
@@ -56,8 +56,41 @@ public class BranchDAO extends BaseDAO<Branch>{
 		save("DELETE FROM `library`.`tbl_library_branch` WHERE branchId = ?", new Object[] {branch.getBranchId()});
 	}
 	
-	public List<Branch> readAllBranch(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
-		setPageNo(pageNo);
-		return read("SELECT * FROM `library`.`tbl_library_branch`", null);
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(branchId) AS a FROM tbl_library_branch");
 	}
+	
+	public List<Branch> readAllBranch(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return read("select * from tbl_library_branch", null);
+	}
+	
+	public List<Branch> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllBranch(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_library_branch WHERE branchName LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(branchId) FROM tbl_library_branch WHERE branchName LIKE ?", input);
+	}
+
+	public Branch getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		ResultSet rs = getById("SELECT * FROM tbl_library_branch WHERE branchId = ?", id);
+		if(!rs.next())
+			return null;
+		Branch p = new Branch();
+		p.setBranchId(id);
+		p.setBranchName(rs.getString("branchName"));
+		p.setBranchAddr(rs.getString("branchAddress"));
+		return p;
+	}
+	
 }

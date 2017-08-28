@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.lms.entity.Borrower;
+import com.gcit.lms.entity.*;
 
 public class BorrowerDAO extends BaseDAO<Borrower>{
 
@@ -56,8 +56,41 @@ public class BorrowerDAO extends BaseDAO<Borrower>{
 		save("DELETE FROM `library`.`tbl_borrower` WHERE cardNo = ?", new Object[] {borrower.getCardNo()});
 	}
 	
-	public List<Borrower> readAllBorrower(int pageNo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+	public List<Borrower> readAllBorrower(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
+		setPageSize(pageSize);
 		return read("SELECT * FROM `library`.`tbl_borrower`", null);
 	}
+
+	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return getAllCount("SELECT COUNT(cardNo) AS a FROM tbl_borrower");
+	}
+	
+	public List<Borrower> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return readAllBorrower(pageNo, pageSize);
+		}
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		return search("SELECT * FROM tbl_borrower WHERE name LIKE ?", input);
+	}
+	
+	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input.isEmpty() || input == null) {
+			return getAllCount();
+		}
+		return searchCount("SELECT COUNT(cardNo) FROM tbl_borrower WHERE name LIKE ?", input);
+	}
+
+	public Borrower getById(Integer id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		ResultSet rs = getById("SELECT * FROM tbl_borrower WHERE cardNo = ?", id);
+		if(!rs.next())
+			return null;
+		Borrower p = new Borrower();
+		p.setAddress(rs.getString("address"));
+		p.setName(rs.getString("name"));
+		p.setPhone(rs.getString("phone"));
+		return p;
+	}
+	
 }
