@@ -1,12 +1,12 @@
 package com.gcit.lms.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Loan;
 
 public class LoanDAO extends BaseDAO<Loan>{
@@ -19,8 +19,8 @@ public class LoanDAO extends BaseDAO<Loan>{
 		save("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?,?,?,curdate(),date_add(curdate(), INTERVAL 7 DAY),null)", new Object[]{loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo()});
 	}
 	
-	public void updateLoan(Loan loan) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
-		save("UPDATE tbl_book_loans SET dueDate=? WHERE bookId = ? AND branchId = ? AND cardNo = ? AND dateOut = ?", new Object[] {loan.getDueDate(),loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(), loan.getDateOut()});
+	public void updateLoan(int bookId, int branchId, int borrowerId, String dateOut, String newDue) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		save("UPDATE tbl_book_loans SET dueDate=? WHERE bookId = ? AND branchId = ? AND cardNo = ? AND dateOut = ?", new Object[] {newDue, bookId, branchId, borrowerId, dateOut});
 	}
 	
 	public void deleteLoan(Loan loan) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
@@ -30,7 +30,13 @@ public class LoanDAO extends BaseDAO<Loan>{
 	public List<Loan> readAllLoans(int pageNo, int pageSize) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 		setPageNo(pageNo);
 		setPageSize(pageSize);
-		return read("select * from tbl_book_loans", null);
+		return readAll("select * from tbl_book_loans", null);
+	}
+	
+	public List<Loan> readAllLoans() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		String sql = "select * from tbl_book_loans";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		return extractData(pstmt.executeQuery());
 	}
 	
 	public List<Loan> extractData(ResultSet rs)	throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -65,7 +71,7 @@ public class LoanDAO extends BaseDAO<Loan>{
 	}
 
 	public Integer getAllCount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return getAllCount("SELECT COUNT(bookId, branchId, cardNo, dateOut) AS a FROM tbl_book_loans");
+		return getAllCount("SELECT COUNT(*)FROM tbl_book_loans");
 	}
 
 	public List<Loan> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -74,14 +80,55 @@ public class LoanDAO extends BaseDAO<Loan>{
 		}
 		setPageNo(pageNo);
 		setPageSize(pageSize);
-		return search("SELECT * FROM tbl_book_loans WHERE dateOut LIKE ?", input);
+		String sql = "SELECT * FROM tbl_book_loans WHERE dateOut LIKE ?";
+		sql+= " LIMIT "+(pageNo-1) * pageSize+" , "+pageSize + ";";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, '%' + input + '%');
+		return extractData(pstmt.executeQuery());
 	}
 	
 	public Integer getSearchCount (String input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if(input.isEmpty() || input == null) {
 			return getAllCount();
 		}
-		return searchCount("SELECT COUNT(bookId, branchId, cardNo, dateOut) FROM tbl_book WHERE dateOut LIKE ?", input);
+		return searchCount("SELECT COUNT(*) FROM tbl_book_loans WHERE dateOut LIKE ?", input);
 	}
 	
+	public List<Loan> getSearchResultBycardNo(int input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input == 0) {
+			return null;
+		}
+		String sql = "SELECT * FROM tbl_book_loans WHERE cardNo = ?";
+		sql+= " LIMIT 0 , 10";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, input);
+		return extractData(pstmt.executeQuery());
+	}
+	
+	public Integer getSearchCountByCardNo (int input) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if(input == 0) {
+			return null;
+		}
+		PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM tbl_book_loans WHERE cardNo = ?");
+		pstmt.setInt(1, input);
+		return pstmt.executeQuery().getInt(1);
+	}
+
+	public void bookCheckOut(int bookId, int branchId, int cardNo) throws SQLException {
+		PreparedStatement pstmt = conn.prepareStatement("INSERT INTO tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) VALUES (?,?,?,curdate(),date_add(curdate(), INTERVAL 7 DAY),null)");
+		pstmt.setInt(1, bookId);
+		pstmt.setInt(2, branchId);
+		pstmt.setInt(3, cardNo);
+		pstmt.executeUpdate();
+	}
+	
+	public void bookReturn(Loan loan) throws SQLException {
+		PreparedStatement pstmt = conn.prepareStatement("UPDATE tbl_book_loans SET dateIn=curdate() WHERE bookId = ? AND branchId = ? AND cardNo = ? AND dateOut = ?");
+		pstmt.setInt(1, loan.getBook().getBookId());
+		pstmt.setInt(2, loan.getBranch().getBranchId());
+		pstmt.setInt(3, loan.getBorrower().getCardNo());
+		pstmt.setString(4, loan.getDateOut());
+		System.out.println(pstmt);
+		pstmt.executeUpdate();
+	}
 }

@@ -23,7 +23,7 @@ public class GenreDAO extends BaseDAO<Genre>{
 			Genre g = new Genre();
 			g.setGenreId(rs.getInt("genre_id"));
 			g.setGenreName(rs.getString("genre_name"));
-			g.setBooks(bdao.readFirstLevel("SELECT * FROM tbl_book WHERE bookId IN (SELECT bookId FROM tbl_book_genre WHERE genre_id = ?)", new Object[] {g.getGenreId()}));
+			g.setBooks(bdao.readFirstLevel("SELECT * FROM tbl_book WHERE bookId IN (SELECT bookId FROM tbl_book_genres WHERE genre_id = ?)", new Object[] {g.getGenreId()}));
 			genres.add(g);
 		}
 		return genres;
@@ -65,7 +65,7 @@ public class GenreDAO extends BaseDAO<Genre>{
 	}
 	
 	public List<Genre> readAllGenre() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
-		return readAll("SELECT * FROM `library`.`tbl_genre`", null);
+		return read("SELECT * FROM `library`.`tbl_genre`", null);
 	}
 
 	public List<Genre> searchByBookId(int bookId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{

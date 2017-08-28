@@ -195,7 +195,7 @@
 						<div class="list-group">
 							<a class="panel-collapse collapse">Loan</a> 
 							<a href="administrationLoanOverride.jsp" class="list-group-item">Override Due</a> 
-							<a href="administrationLoan" class="list-group-item">View</a>
+							<a href="administrationLoan.jsp" class="list-group-item">View</a>
 						</div>
 					</div>
 				</div>

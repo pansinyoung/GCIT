@@ -7,7 +7,7 @@ import java.util.List;
 import com.gcit.lms.dao.*;
 import com.gcit.lms.entity.*;
 
-public class AdminService {
+public class LibrarianService {
 	ConnectionUtil connUtil = new ConnectionUtil();
 	
 	public Integer addUpdateBook(Book book) throws SQLException{
@@ -593,6 +593,40 @@ public class AdminService {
 			conn = connUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
 			return bdao.readAllBranch(pageNo, pageSize);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
+	
+	public List<BookCopies> readCopiesByBranchId(int branchId) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookCopiesDAO bdao = new BookCopiesDAO(conn);
+			return bdao.readCopiesByBranchId(branchId);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return null;
+	}
+	
+	public List<Branch> readAllBranch() throws SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BranchDAO bdao = new BranchDAO(conn);
+			return bdao.readAllBranch();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			conn.rollback();
@@ -1232,4 +1266,22 @@ public class AdminService {
 		}
 		return null;
 	}
+
+	public void addCopiesToBranch(int branchId, int bookId, int addedNumber) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookCopiesDAO bdao = new BookCopiesDAO(conn);
+			bdao.addCopiesToBranch(branchId, bookId, addedNumber);
+			conn.commit();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			conn.rollback();
+		} finally{
+			if(conn!=null){
+				conn.close();
+			}
+		}
+	}
+	
 }

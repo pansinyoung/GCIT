@@ -1,6 +1,7 @@
 package com.gcit.lms.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,4 +94,9 @@ public class BorrowerDAO extends BaseDAO<Borrower>{
 		return p;
 	}
 	
+	public Boolean borrowerLogin(int cardNo) throws SQLException {
+		PreparedStatement pstmt = conn.prepareStatement("select * from tbl_borrower where cardNo = ?");
+		pstmt.setInt(1, cardNo);
+		return pstmt.executeQuery().next();
+	}
 }

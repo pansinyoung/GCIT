@@ -1,6 +1,7 @@
 package com.gcit.lms.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ public class BranchDAO extends BaseDAO<Branch>{
 		setPageNo(pageNo);
 		setPageSize(pageSize);
 		return read("select * from tbl_library_branch", null);
+	}
+	
+	public List<Branch> readAllBranch() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement("select * from tbl_library_branch");
+		return extractData(pstmt.executeQuery());
 	}
 	
 	public List<Branch> getSearchResult(String input, Integer pageNo, Integer pageSize) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {

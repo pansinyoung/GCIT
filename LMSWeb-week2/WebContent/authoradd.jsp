@@ -17,7 +17,7 @@
 		Enter author name: <input type="text" name="authorName" style="margin-right: 40px">
 		
 		Select books: <select multiple="multiple" name = "books" style="margin-right: 40px;width: 172px;height: 100px;">
-		<%if(!books.isEmpty()&&books!=null){ 
+		<%if(books!=null&&!books.isEmpty()){ 
 			for(Book b: books){%>
 			<option value=<%=b.getBookId().toString()%>> <%=b.getTitle()%> </option>
 		<%}} %>

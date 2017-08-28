@@ -19,21 +19,21 @@
 		Enter book title: <input type="text" name="title" style="margin-right: 40px">
 		
 		Select a publisher: <select name = "publisher">
-		<%if(!publishers.isEmpty()&&publishers!=null){ 
+		<%if(publishers!=null&&!publishers.isEmpty()){ 
 			for(Publisher p: publishers){%>
 			<option value=<%=p.getPublisherId().toString()%>> <%=p.getPublisherName()%> </option>
 		<%}} %>
 		</select><br /><br /> 
 		
 		Select authors: <select multiple="multiple" name = "author" style="margin-right: 40px;width: 172px;height: 100px;">
-		<%if(!authors.isEmpty()&&authors!=null){ 
+		<%if(authors!=null&&!authors.isEmpty()){ 
 			for(Author a: authors){%>
 			<option value=<%=a.getAuthorId().toString()%>> <%=a.getAuthorName()%> </option>
 		<%}} %>
 		</select>
 		
 		Select genres: <select multiple="multiple" name = "genre" style="margin-right: 40px;width: 172px;height: 100px;">
-		<%if(!genres.isEmpty()&&genres!=null){ 
+		<%if(genres!=null&&!genres.isEmpty()){ 
 			for(Genre g: genres){%>
 			<option value=<%=g.getGenreId().toString()%>> <%=g.getGenre_name()%> </option>
 		<%}} %>

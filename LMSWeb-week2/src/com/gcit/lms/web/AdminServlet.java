@@ -2,6 +2,8 @@ package com.gcit.lms.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +25,10 @@ import com.gcit.lms.service.*;
 		,"/searchBorrower", "/administrationBorrower", "/addBorrower", "/updateBorrower", "/administrationBorrowerDelete", "/administrationBorrowerUpdate"
 		,"/searchBorrowerUpdate","/searchBorrowerDelete"
 		,"/searchGenre", "/administrationGenre", "/addGenre", "/updateGenre", "/administrationGenreDelete", "/administrationGenreUpdate"
-		,"/searchGenreUpdate","/searchGenreDelete"})
+		,"/searchGenreUpdate","/searchGenreDelete"
+		, "/administrationLoan","/searchLoan", "/updateLoan", "/administrationLoanOverride","/searchLoanOverride"
+		,"/borrowerServlet", "/borrowerLogin", "/bookCheckOut", "/bookReturn","/borrowerReturnjump", "/updateBranchlib"
+		,"/addBranchCopies"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -45,6 +50,8 @@ public class AdminServlet extends HttpServlet {
 		String[] author = {""};
 		String[] genre = {""};
 		Book book = new  Book();
+		borrowerService borrowerService = new borrowerService();
+		Integer logInCardNo = 0;
 
 		switch(reqUrl) {
 		case "/administrationBook":
@@ -719,6 +726,101 @@ public class AdminServlet extends HttpServlet {
 			request.setAttribute("pageSize", pageSize);
 			forwardPath = "/administrationGenreDelete.jsp";
 			break;
+			
+		case "/searchLoan":
+			input = request.getParameter("searchString");
+			pageNo = (request.getParameter("pageNo")!=null) ? Integer.parseInt(request.getParameter("pageNo")) : 1;
+			pageSize = (request.getParameter("pageSize")!=null) ? Integer.parseInt(request.getParameter("pageSize")) : 10;
+			
+			try {
+				request.setAttribute("loans", service.searchLoan(input, pageNo, pageSize));
+				request.setAttribute("totalCount", service.searchLoanCount(input, pageNo, pageSize));
+				request.setAttribute("pageNum", pageNo);
+				request.setAttribute("pageSize", pageSize);
+				request.setAttribute("searchString", input);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			forwardPath = "/administrationLoan.jsp";
+			break;
+			
+		case "/administrationLoan":
+			pageNo = (request.getParameter("pageNo")!=null) ? Integer.parseInt(request.getParameter("pageNo")) : 1;
+			pageSize = (request.getParameter("pageSize")!=null) ? Integer.parseInt(request.getParameter("pageSize")) : 10;
+			
+			try {
+				request.setAttribute("loans", service.readAllLoans(pageNo, pageSize));
+				request.setAttribute("totalCount", service.getAllCountLoan());
+				request.setAttribute("pageNum", pageNo);
+				request.setAttribute("pageSize", pageSize);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			forwardPath="/administrationLoan.jsp";
+			break;
+			
+		case "/searchLoanOverride":
+			input = request.getParameter("searchString");
+			pageNo = (request.getParameter("pageNo")!=null) ? Integer.parseInt(request.getParameter("pageNo")) : 1;
+			pageSize = (request.getParameter("pageSize")!=null) ? Integer.parseInt(request.getParameter("pageSize")) : 10;
+			
+			try {
+				request.setAttribute("loans", service.searchLoan(input, pageNo, pageSize));
+				request.setAttribute("totalCount", service.searchLoanCount(input, pageNo, pageSize));
+				request.setAttribute("pageNum", pageNo);
+				request.setAttribute("pageSize", pageSize);
+				request.setAttribute("searchString", input);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			forwardPath = "/administrationLoanOverride.jsp";
+			break;
+			
+		case "/administrationLoanOverride":
+			pageNo = (request.getParameter("pageNo")!=null) ? Integer.parseInt(request.getParameter("pageNo")) : 1;
+			pageSize = (request.getParameter("pageSize")!=null) ? Integer.parseInt(request.getParameter("pageSize")) : 10;
+			
+			try {
+				request.setAttribute("loans", service.readAllLoans(pageNo, pageSize));
+				request.setAttribute("totalCount", service.getAllCountLoan());
+				request.setAttribute("pageNum", pageNo);
+				request.setAttribute("pageSize", pageSize);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			forwardPath="/administrationLoanOverride.jsp";
+			break;
+			
+		case "/borrowerReturnjump":
+			logInCardNo = (request.getParameter("cardNo")!=null) ?Integer.parseInt(request.getParameter("cardNo")): 0;
+			forwardPath = "/borrowerReturn.jsp";
+			try {
+				request.setAttribute("loans", borrowerService.returnLoanByCardNo(logInCardNo));
+				request.setAttribute("cardBo", logInCardNo);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			request.setAttribute("cardNo", logInCardNo);
+			break;
+			
+		case "/bookReturn":
+			logInCardNo = (request.getSession().getAttribute("cardNo")!=null) ?(int) request.getSession().getAttribute("cardNo"): 0;
+			forwardPath = "/borrowerReturn.jsp";
+			List<Loan> returnedLoan =(List<Loan>) request.getSession().getAttribute("loans");
+			Integer index = Integer.parseInt( request.getParameter("index"));
+			try {
+				System.out.println("in try");
+				borrowerService.returnBook(returnedLoan.get(index));
+				request.setAttribute("loans", borrowerService.returnLoanByCardNo(logInCardNo));
+				request.setAttribute("cardNo", logInCardNo);
+				message = "returned successfully";
+			} catch (SQLException | NumberFormatException e) {
+				message = "Check Out Error. See IT.";
+				e.printStackTrace();
+			}
+			break;
 		}
 		request.setAttribute("confMessage", message);
 		RequestDispatcher rd = request.getRequestDispatcher(forwardPath);
@@ -740,6 +842,8 @@ public class AdminServlet extends HttpServlet {
 		String[] genre = {""};
 		String authorName = "";
 		Book book = new  Book();
+		borrowerService borrowerService = new borrowerService();
+		LibrarianService liService = new LibrarianService();
 		
 		
 		switch(reqUrl) {
@@ -814,12 +918,50 @@ public class AdminServlet extends HttpServlet {
 				try {
 					service.addUpdateBranch(updateBranch);
 					message = "Update successfully";
+					forwardPath="/administrationBranchUpdate.jsp";
 				} catch (NumberFormatException | SQLException e) {
 					message = "Update failed.";
 					e.printStackTrace();
 				}
 			}
-			forwardPath="/administrationBranchUpdate.jsp";
+			
+			break;
+			
+		case "/updateBranchlib":
+			if(request.getParameter("branchId")!=null) {
+				Branch updateBranch = new Branch();
+				updateBranch.setBranchId(Integer.parseInt(request.getParameter("branchId")));
+				updateBranch.setBranchName(request.getParameter("branchName"));
+				updateBranch.setBranchAddr(request.getParameter("branchAddress"));
+				try {
+					service.addUpdateBranch(updateBranch);
+					message = "Update successfully";
+					forwardPath="/librarianUpdate.jsp";
+				} catch (NumberFormatException | SQLException e) {
+					message = "Update failed.";
+					e.printStackTrace();
+				}
+			}
+			
+			break;
+			
+		case "/addBranchCopies":
+			int addedNumber = !request.getParameter("addedNumber").isEmpty()? Integer.parseInt(request.getParameter("addedNumber")):0;
+			if(addedNumber==0) {
+				message = "No book added!";
+				forwardPath="/librarianAddCopies.jsp";
+				break;
+			}
+			int branchId = Integer.parseInt(request.getParameter("branchId"));
+			int bookId = Integer.parseInt(request.getParameter("bookId"));
+			try {
+				liService.addCopiesToBranch(branchId, bookId, addedNumber);
+				message = "Update successfully";
+				forwardPath="/librarianAddCopies.jsp";
+			} catch (NumberFormatException | SQLException e) {
+				message = "Update failed.";
+				e.printStackTrace();
+			}
 			break;
 			
 		case "/addBook":
@@ -889,30 +1031,6 @@ public class AdminServlet extends HttpServlet {
 			forwardPath="/administrationBranch.jsp";
 			break;
 			
-		case "/updateG":
-			if(request.getParameter("bookId")!=null) {
-				book.setBookId(Integer.parseInt(request.getParameter("bookId")));
-				title = request.getParameter("title");
-				publisher = request.getParameter("publisher");
-				author = request.getParameterValues("author");
-				genre = request.getParameterValues("genre");
-				try {
-					service.updateBookPublisher(book.getBookId(),Integer.parseInt(publisher));
-					book.setTitle(title);
-					service.addUpdateBook(book);
-					if(author!=null && author.length>0)
-						service.updateBookAuthor(book.getBookId(), author);
-					if(genre!=null && genre.length>0)
-						service.updateBookGenre(book.getBookId(), genre);
-					message = "Update successfully";
-				} catch (NumberFormatException | SQLException e) {
-					message = "Update failed.";
-					e.printStackTrace();
-				}
-			}
-			forwardPath="/administrationBookUpdate.jsp";
-			break;
-			
 		case "/addBorrower":
 			Borrower addedBorrower = new Borrower();
 			addedBorrower.setName(request.getParameter("borrowerName"));
@@ -965,6 +1083,61 @@ public class AdminServlet extends HttpServlet {
 			}
 			forwardPath="/administrationGenre.jsp";
 
+			break;
+			
+		case "/updateLoan":
+			try {
+				service.updateLoan(Integer.parseInt(request.getParameter("bookId")), Integer.parseInt(request.getParameter("branchId")), Integer.parseInt(request.getParameter("borrowerId")), request.getParameter("dateOut"), request.getParameter("dueDate"));
+				message = "Update successfully";
+			} catch (NumberFormatException | SQLException e) {
+				message = "Update failed.";
+				e.printStackTrace();
+			}
+			forwardPath="/administrationLoanOverride.jsp";
+			break;
+			
+		case "/borrowerLogin":
+			Integer logInCardNo = 0;
+			try {
+				logInCardNo = (request.getParameter("cardNo")!=null) ?Integer.parseInt(request.getParameter("cardNo")): 0;
+				if(borrowerService.borrowerLogin(logInCardNo)) {
+					request.setAttribute("loans", borrowerService.returnLoanByCardNo(logInCardNo));
+					request.setAttribute("cardNo", logInCardNo);
+					forwardPath = "/borrower.jsp";
+				}else {
+					message = "Please enter a valid card Number. Try Again.";
+				}
+			} catch (SQLException | NumberFormatException e) {
+				message = "Please enter a valid card Number. Try Again.";
+				e.printStackTrace();
+			}
+			break;
+			
+		case "/bookCheckOut":
+			logInCardNo = (request.getParameter("cardNo")!=null) ?Integer.parseInt(request.getParameter("cardNo")): 0;
+			forwardPath = "/borrower.jsp";
+			if(request.getParameter("branch")==null) {
+				message = "Please select a branch!";
+				break;
+			}
+			if(request.getParameter("book")==null) {
+				message = "Please select a book!";
+				break;
+			}
+			if(logInCardNo==0) {
+				message = "Error, please login again!";
+				forwardPath = "/borrowerLogIn.jsp";
+				break;
+			}
+			try {
+				borrowerService.checkOutBook(logInCardNo, Integer.parseInt(request.getParameter("book")), Integer.parseInt(request.getParameter("branch")));
+				request.setAttribute("loans", borrowerService.returnLoanByCardNo(logInCardNo));
+				request.setAttribute("cardNo", logInCardNo);
+				message = "checkout successfully!";
+			} catch (SQLException | NumberFormatException e) {
+				message = "Check Out Error. See IT.";
+				e.printStackTrace();
+			}
 			break;
 		}
 		request.setAttribute("confMessage", message);

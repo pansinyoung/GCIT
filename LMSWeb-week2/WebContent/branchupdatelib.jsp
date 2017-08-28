@@ -15,7 +15,7 @@
 	</button>
 	<h4 class="modal-title" id="myModalLabel">Edit Book</h4>
 </div>
-<form action="updateBranch" method="post">
+<form action="updateBranchlib" method="post">
 	<div class="modal-body">
 		<h3>Enter details to edit branch:</h3>
 		Enter branch name: <input type="text" name="branchName" style="margin-right: 40px" value="<%=selectedBranch.getBranchName()%>" ><br/>

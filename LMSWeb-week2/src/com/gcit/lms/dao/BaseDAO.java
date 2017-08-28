@@ -59,6 +59,7 @@ public abstract class BaseDAO<T> {
 	}
 
 	public List<T> readAll(String sql, Object[] vals) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		sql+= " LIMIT "+(getPageNo()-1) * getPageSize()+" , "+getPageSize();
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		if(vals!=null) {
 			int count = 1;
@@ -67,7 +68,7 @@ public abstract class BaseDAO<T> {
 			}
 		}
 		
-		return extractDataFirstLevel(pstmt.executeQuery());
+		return extractData(pstmt.executeQuery());
 	}
 	
 	public abstract List<T> extractData(ResultSet rs) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;

@@ -26,7 +26,7 @@
 		</div>
 		
 		<div class = "col-sm-4" align="center">
-			<a href="#">
+			<a href="borrowerLogIn.jsp">
 				<button type="button" class="btn btn-lg btn-primary" >
 					<h1>Borrower</h1>
 					<h3 align="left">Manage your loans:</h3>
@@ -37,7 +37,7 @@
 		</div>
 		
 		<div class = "col-sm-4" align="center">
-			<a href="#">
+			<a href="librarian.jsp">
 			<button type="button" class="btn btn-lg btn-info" >
 				<h1>Librarian</h1>
 				<h3 align="left">Manage your branch:</h3>
