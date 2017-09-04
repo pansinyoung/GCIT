@@ -89,12 +89,12 @@ public class AuthorDAO extends BaseDAO<Author> implements ResultSetExtractor<Lis
 		return null;
 	}
 
-	public void addUpdateAuthorBook(int authorId, String[] book) throws SQLException {
+	public void addUpdateAuthorBook(int authorId, List<Integer> book) throws SQLException {
 		template.update("DELETE FROM `library`.`tbl_book_authors` WHERE authorId= ?", new Object[] {authorId});
 		if(book==null)
 			return;
-		for(String s: book) {
-			template.update("INSERT INTO tbl_book_authors VALUES (?, ?)", new Object[] {Integer.parseInt(s), authorId});
+		for(Integer s: book) {
+			template.update("INSERT INTO tbl_book_authors VALUES (?, ?)", new Object[] {s, authorId});
 		}
 	}
 }

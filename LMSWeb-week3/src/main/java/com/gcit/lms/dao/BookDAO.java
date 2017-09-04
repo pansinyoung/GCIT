@@ -83,20 +83,20 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 		return template.queryForObject("SELECT COUNT(*) AS a FROM tbl_book", Integer.class);
 	}
 	
-	public void addUpdateBookAuthor(int bookId, String[] author) throws SQLException {
+	public void addUpdateBookAuthor(int bookId, List<Integer> author) throws SQLException {
 		template.update("DELETE FROM `library`.`tbl_book_authors` WHERE bookId= ?", new Object[] {bookId});
-		if (author!=null && author.length>0) {
-			for (String s : author) {
-				template.update("INSERT INTO tbl_book_authors VALUES (?, ?)", new Object[] {bookId, Integer.parseInt(s)});
+		if (author!=null && !author.isEmpty()) {
+			for (Integer s : author) {
+				template.update("INSERT INTO tbl_book_authors VALUES (?, ?)", new Object[] {bookId, s});
 			} 
 		}
 	}
 	
-	public void addUpdateBookGenre(int bookId, String[] genre) throws SQLException {
+	public void addUpdateBookGenre(int bookId, List<Integer> genre) throws SQLException {
 		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE bookId= ?", new Object[] {bookId});
-		if (genre!=null&&genre.length>0) {
-			for (String s : genre) {
-				template.update("INSERT INTO tbl_book_genres VALUES (?, ?)", new Object[] {Integer.parseInt(s), bookId});
+		if (genre!=null&&!genre.isEmpty()) {
+			for (Integer s : genre) {
+				template.update("INSERT INTO tbl_book_genres VALUES (?, ?)", new Object[] {s, bookId});
 			} 
 		}
 	}

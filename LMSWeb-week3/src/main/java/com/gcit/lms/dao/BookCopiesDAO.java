@@ -58,6 +58,10 @@ public class BookCopiesDAO extends BaseDAO<BookCopies> implements ResultSetExtra
 		return template.query("select * from tbl_book_copies where branchId = ?", new Object[] {branchId}, this);
 	}
 
+	public List<BookCopies> readCopiesByBookId(int bookId) throws SQLException{
+		return template.query("select * from tbl_book_copies where bookId = ?", new Object[] {bookId}, this);
+	}
+	
 	public void addCopiesToBranch(int branchId, int bookId, int addedNumber) throws SQLException {
 		if(template.query("SELECT * FROM tbl_book_copies WHERE bookId = ? AND branchId = ?", new Object[] {bookId, branchId}, this) != null)
 			template.update("UPDATE tbl_book_copies SET noOfCopies = noOfCopies + ? WHERE bookId = ? AND branchId = ?", new Object[] {addedNumber, bookId, branchId});

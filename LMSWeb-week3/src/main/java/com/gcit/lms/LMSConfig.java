@@ -8,7 +8,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.gcit.lms.dao.*;
-import com.gcit.lms.service.AllService;
+import com.gcit.lms.service.*;
+import com.gcit.lms.entity.*;
 
 @Configuration
 public class LMSConfig {
@@ -83,4 +84,8 @@ public class LMSConfig {
 		return new GenreDAO();
 	}
 
+	@Bean
+	public SearchPagi searPag() {
+		return new SearchPagi();
+	}
 }

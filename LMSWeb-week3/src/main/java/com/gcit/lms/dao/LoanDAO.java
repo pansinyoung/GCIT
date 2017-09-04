@@ -80,8 +80,18 @@ public class LoanDAO extends BaseDAO<Loan> implements ResultSetExtractor<List<Lo
 		return template.query(sql, new Object[] {input}, this);
 	}
 	
-	public Integer getSearchCountByCardNo (int input) throws SQLException{
-		return template.queryForObject("SELECT COUNT(*) FROM tbl_book_loans where cardNo = ?", new Object[] {input}, Integer.class);
+	public List<Loan> getResultByBookId(int bookId) throws SQLException{
+		String sql = "SELECT * FROM tbl_book_loans WHERE bookId = ?";
+		return template.query(sql, new Object[] {bookId}, this);
+	}
+	
+	public List<Loan> getResultByBranchId(int branchId) throws SQLException{
+		String sql = "SELECT * FROM tbl_book_loans WHERE branchId = ?";
+		return template.query(sql, new Object[] {branchId}, this);
+	}
+	
+	public List<Loan> getResultByCardNo (int input) throws SQLException{
+		return template.query("SELECT * FROM tbl_book_loans where cardNo = ?", new Object[] {input}, this);
 	}
 
 	public void bookCheckOut(int bookId, int branchId, int cardNo) throws SQLException {

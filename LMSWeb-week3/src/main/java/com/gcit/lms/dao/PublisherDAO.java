@@ -22,7 +22,7 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 		List<Publisher> publishers = new ArrayList<>();
 		while(rs.next()) {
 			Publisher p = new Publisher();
-			p.setPublisherId(rs.getInt("pubId"));
+			p.setPublisherId(rs.getInt("publisherId"));
 			p.setPublisherName(rs.getString("publisherName"));
 			p.setPublisherAddr(rs.getString("publisherAddress"));
 			p.setPublisherPhone(rs.getString("publisherPhone"));
@@ -52,7 +52,7 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 	}
 	
 	public void deletePublisher(Publisher publisher) throws SQLException {
-		template.update("UPDATE `library`.`tbl_book` SET pubId = NULL WHERE pubId = ?", new Object[] {publisher.getPublisherId()} );
+		template.update("UPDATE `library`.`tbl_book` SET publisherId = NULL WHERE publisherId = ?", new Object[] {publisher.getPublisherId()} );
 		template.update("DELETE FROM `library`.`tbl_publisher` WHERE publisherId = ?", new Object[] {publisher.getPublisherId()});
 	}
 	

@@ -22,7 +22,7 @@ public class GenreDAO extends BaseDAO<Genre> implements ResultSetExtractor<List<
 		List<Genre> genres = new ArrayList<>();
 		while(rs.next()) {
 			Genre g = new Genre();
-			g.setGenreId(rs.getInt("genre_id"));
+			g.setGenre_id(rs.getInt("genre_id"));
 			g.setGenreName(rs.getString("genre_name"));
 			genres.add(g);
 		}
@@ -44,12 +44,12 @@ public class GenreDAO extends BaseDAO<Genre> implements ResultSetExtractor<List<
 	}
 	
 	public void updateGenre(Genre genre) throws SQLException {
-		template.update("UPDATE `library`.`tbl_genre` SET genre_name = ? WHERE genre_id = ?", new Object[] {genre.getGenre_name(), genre.getGenreId()});
+		template.update("UPDATE `library`.`tbl_genre` SET genre_name = ? WHERE genre_id = ?", new Object[] {genre.getGenre_name(), genre.getGenre_id()});
 	}
 	
 	public void deleteGenre(Genre genre) throws SQLException {
-		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genre.getGenreId()});
-		template.update("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre.getGenreId()});
+		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genre.getGenre_id()});
+		template.update("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre.getGenre_id()});
 	}
 	
 	public List<Genre> readAllGenre(String searchString, int pageNo, int pageSize) throws SQLException{
@@ -89,12 +89,11 @@ public class GenreDAO extends BaseDAO<Genre> implements ResultSetExtractor<List<
 		return null;
 	}
 
-	public void addUpdateGenreBook(int genreId, String[] books) throws NumberFormatException, SQLException {
+	public void addUpdateGenreBook(int genreId, List<Integer> books) throws NumberFormatException, SQLException {
 		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genreId});
-		if (books!=null&&books.length>0) {
-			for (String s : books) {
-				template.update("INSERT INTO tbl_book_genres VALUES (?, ?)", new Object[] {genreId, Integer.parseInt(s)});
-			} 
+		if (books!=null&&!books.isEmpty()) {
+			for (Integer s : books) {
+				template.update("INSERT INTO tbl_book_genres VALUES (?, ?)", new Object[] {genreId, s});			} 
 		}
 	}
 }

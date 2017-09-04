@@ -7,34 +7,34 @@ public class Genre implements Serializable{
 
 	private static final long serialVersionUID = 1066847902991243572L;
 	
-	private Integer genreId;
-	private String genrename;
+	private Integer genre_id;
+	private String genre_name;
 	private List<Book> books;
 	
 	//Getters and Setters
 	/**
 	 * @return the genreId
 	 */
-	public Integer getGenreId() {
-		return genreId;
+	public Integer getGenre_id() {
+		return genre_id;
 	}
 	/**
 	 * @param genreId the genreId to set
 	 */
-	public void setGenreId(Integer genreId) {
-		this.genreId = genreId;
+	public void setGenre_id(Integer genreId) {
+		this.genre_id = genreId;
 	}
 	/**
 	 * @return the genrename
 	 */
 	public String getGenre_name() {
-		return genrename;
+		return genre_name;
 	}
 	/**
 	 * @param genreName the genreName to set
 	 */
 	public void setGenreName(String genreName) {
-		this.genrename = genreName;
+		this.genre_name = genreName;
 	}
 	/**
 	 * @return the books
@@ -57,8 +57,8 @@ public class Genre implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((genreId == null) ? 0 : genreId.hashCode());
-		result = prime * result + ((genrename == null) ? 0 : genrename.hashCode());
+		result = prime * result + ((genre_id == null) ? 0 : genre_id.hashCode());
+		result = prime * result + ((genre_name == null) ? 0 : genre_name.hashCode());
 		return result;
 	}
 	/* (non-Javadoc)
@@ -73,15 +73,15 @@ public class Genre implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Genre other = (Genre) obj;
-		if (genreId == null) {
-			if (other.genreId != null)
+		if (genre_id == null) {
+			if (other.genre_id != null)
 				return false;
-		} else if (!genreId.equals(other.genreId))
+		} else if (!genre_id.equals(other.genre_id))
 			return false;
-		if (genrename == null) {
-			if (other.genrename != null)
+		if (genre_name == null) {
+			if (other.genre_name != null)
 				return false;
-		} else if (!genrename.equals(other.genrename))
+		} else if (!genre_name.equals(other.genre_name))
 			return false;
 		return true;
 	}
