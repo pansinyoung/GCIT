@@ -1,0 +1,99 @@
+
+<script data-require="angular.js@*" data-semver="1.4.1" src="http://code.angularjs.org/1.4.1/angular.js"></script>
+<script data-require="angular-route.js@*" data-semver="1.4.1" src="http://code.angularjs.org/1.4.1/angular-route.js"></script>
+<script data-require="angular-route.js@*" data-semver="1.4.1" src="http://code.angularjs.org/1.4.1/angular-cookies.js"></script>
+<script src="./resources/lib/angular-ui-bootstrap-modal.js"></script>
+<script src="./resources/lib/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="./resources/lib/simplePagination.js"></script>
+<script src="./resources/business/common/module.js"></script>
+<script src="./resources/business/common/config.js"></script>
+<script src="./resources/business/book/book-controllers.js"></script>
+<script src="./resources/business/book/book-services.js"></script>
+<!--<script src="./resources/business/author/author-controllers.js"></script>-->
+<script src="./resources/business/author/author-services.js"></script>
+<!--<script src="./resources/business/genre/genre-controllers.js"></script>-->
+<script src="./resources/business/genre/genre-services.js"></script>
+<!--<script src="./resources/business/publisher/publisher-controllers.js"></script>-->
+<script src="./resources/business/publisher/publisher-services.js"></script>
+
+<html lang="en" ng-app="lmsApp">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://54.83.8.59/site/wp-content/uploads/2014/02/favicon.png">
+    
+
+    <title>LMS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./template_files/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="./template_files/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="./template_files/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./template_files/theme.css" rel="stylesheet">
+	
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="./template_files/ie-emulation-modes-warning.js.download"></script>
+     
+    
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-light navbar-fixed-top myNavBar" style="background-color: #d9edf7;">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" style="color: black; font-size: 20px; font-weight: bold;">GCIT-LMS</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#/">Home</a></li>
+            <li><a href="#/administrationBook">Administrater</a></li>
+            <li><a href="#/borrowerLogIn">Borrower</a></li>
+            <li><a href="#/librarian">Librarian</a></li>
+<!--             <li class="dropdown"> -->
+<!--               <a href="https://getbootstrap.com/docs/3.3/examples/theme/#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu</a> -->
+<!--               <ul class="dropdown-menu"> -->
+<!--                 <li><a href="admin.jsp">Administrator</a></li> -->
+<!--                 <li><a href="https://getbootstrap.com/docs/3.3/examples/theme/#">Borrower</a></li> -->
+<!--                 <li><a href="https://getbootstrap.com/docs/3.3/examples/theme/#">Librarian</a></li> -->
+<!--               </ul> -->
+<!--             </li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+        <section data-ng-view="" id="content" class="animate-fade-up"></section>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./template_files/jquery.min.js.download"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./template_files/bootstrap.min.js.download"></script>
+    <script src="./template_files/docs.min.js.download"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./template_files/ie10-viewport-bug-workaround.js.download"></script>
+
+  
