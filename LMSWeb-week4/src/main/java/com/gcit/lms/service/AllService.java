@@ -681,15 +681,18 @@ public class AllService {
 	public Borrower selectBorrowerById(@RequestBody String cardNo) {
 		try {
 			Borrower bo = bodao.getById(Integer.parseInt(cardNo));
-			if(bo!=null)
-			bo.setLoans(ldao.getResultByCardNo(bo.getCardNo()));
-			for(Loan l: bo.getLoans()) {
-				l.setBook(bdao.getById(l.getBook().getBookId()));
-				l.setBranch(brdao.getById(l.getBranch().getBranchId()));
+			if(bo!=null) {
+				bo.setLoans(ldao.getResultByCardNo(bo.getCardNo()));
+				for(Loan l: bo.getLoans()) {
+					l.setBook(bdao.getById(l.getBook().getBookId()));
+					l.setBranch(brdao.getById(l.getBranch().getBranchId()));
+				}
 			}
 			return bo;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			return null;
 		}
 		return null;
 	}
