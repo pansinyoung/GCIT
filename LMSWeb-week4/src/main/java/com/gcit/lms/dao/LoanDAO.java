@@ -54,9 +54,9 @@ public class LoanDAO extends BaseDAO<Loan> implements ResultSetExtractor<List<Lo
 			l.setBook(book);
 			l.setBranch(branch);
 			l.setBorrower(borrower);
-			l.setDateIn(rs.getString("dateIn"));
-			l.setDueDate(rs.getString("dueDate"));
-			l.setDateOut(rs.getString("dateOut"));
+			l.setDateIn(rs.getString("dateIn")==null ? rs.getString("dateIn") : rs.getString("dateIn").substring(0, 10));
+			l.setDueDate(rs.getString("dueDate").substring(0, 10));
+			l.setDateOut(rs.getString("dateOut").substring(0, 10));
 			loans.add(l);
 		}
 		return loans;

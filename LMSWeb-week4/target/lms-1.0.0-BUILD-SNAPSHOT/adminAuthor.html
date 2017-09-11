@@ -1,0 +1,236 @@
+<div class="container theme-showcase" role="main" ng-controller="listAuthorController">
+
+	<div class="jumbotron" style="background-color: #337ab7 !important;">
+		<h1 align="center">Welcome Administrater</h1>
+	</div>
+	<div class="page-header">
+		<div class="col-md-6" align="left">
+			<h1 style="font-size: 24px !important;">Please select your
+				action:</h1>
+		</div>
+
+	</div>
+    <div class="col-md-6" align="right">
+        <div class="row">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchString" placeholder="Search" ng-change="searchAuthor()">
+            </div>
+        </div>
+	</div>
+
+	<div class="row">
+
+		<!-- Menu Block to the left side -->
+
+		<div class="col-sm-2" align="center" style="float: left;">
+
+			<!-- Collapsed Menu -->
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse1">Book</a>
+						</h4>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Book</a> 
+							<a ng-Click="goToBook()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToBook()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToBook()" class="list-group-item">Update</a> 
+							<a ng-Click="goToBook()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse2">Author</a>
+						</h4>
+					</div>
+					<div id="collapse2" class="panel-collapse collapse in">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Author</a> 
+							<a ng-Click="addAuthorClicked()" class="list-group-item" >Add</a> 
+							<a ng-Click="deleteAuthorClicked()" class="list-group-item">Delete</a> 
+							<a ng-Click="updateAuthorClicked()" class="list-group-item">Update</a> 
+							<a ng-Click="viewAuthorClicked()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse3">Publisher</a>
+						</h4>
+					</div>
+					<div id="collapse3" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Publisher</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">Update</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse4">Branch</a>
+						</h4>
+					</div>
+					<div id="collapse4" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Branch</a> 
+							<a ng-Click="goToBranch()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToBranch()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToBranch()" class="list-group-item">Update</a> 
+							<a ng-Click="goToBranch()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse5">Borrower</a>
+						</h4>
+					</div>
+					<div id="collapse5" class="panel-collapse collapse">
+						<div class="list-group">
+							<div class="list-group">
+							<a class="panel-collapse collapse">Borrower</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">Update</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">View</a>
+						</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse6">Genre</a>
+						</h4>
+					</div>
+					<div id="collapse6" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Genre</a> 
+							<a ng-Click="goToGenre()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">Update</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse7">Loan</a>
+						</h4>
+					</div>
+					<div id="collapse7" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Loan</a> 
+							<a ng-Click="goToLoan()" class="list-group-item">Override Due</a> 
+							<a ng-Click="goToLoan()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+
+		<!-- End Menu Block to the left side -->
+
+
+		<!-- 	Author Table on the right -->
+		<div class="col-lg-10" align="center" style="float: right;">
+
+			<table class="table table-striped" style="text-align: center;">
+				<tr style="text-align: center;">
+					<th style="text-align: center;">#</th>
+					<th style="text-align: center;">Author Name</th>
+					<th style="text-align: center;">Books</th>
+					<th style="text-align: center;" ng-if="showEditButton">Edit</th>
+					<th style="text-align: center;" ng-if="showDeleteButton">Delete</th>
+					<th style="text-align: center;" ng-if="showUpdateButton">Update</th>
+				<tr ng-repeat="a in authors | startFrom: pagination.page * pagination.perPage | limitTo: pagination.perPage">
+                    <td>{{$index+1}}</td>
+                    <td>{{a.authorName}}</td>
+                    <td>
+                        <div class="col-sm-1">
+							<div class="dropdown" style="width: 200px;">
+								<button class="btn btn-info dropdown-toggle" type="button"
+									data-toggle="dropdown">
+									Books <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li ng-if="a.books.length==0"><a>No book stored</a></li>
+                                    <li ng-if="a.books.length!=0" ng-repeat="b in a.books">{{b.title}}</li>
+								</ul>
+							</div>
+						</div>
+                    </td>
+                    
+					<td ng-if="showDeleteButton"><button class="btn btn-sm btn-danger" confirmed-click="deleteAuthorButtonClicked(a.authorId)" ng-confirm-click="Delete {{a.authorName}}?">Delete</button></td>
+					<td ng-if="showUpdateButton"><button class="btn btn-sm btn-warning" ng-Click="updateAuthorButtonClicked(a.authorId)">Update</button></td>
+				</tr>
+			</table>
+
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+        			<li ng-repeat="n in [] | range: pagination.numPages" ng-class="{active: n == pagination.page}"><a href="" ng-click="pagination.toPageId(n)">{{n + 1}}</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- 	End Author Table on the right -->
+	</div>
+    
+    <script type="text/ng-template" id="addAuthorModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                    <h3>Enter details to add author: </h3>
+                    Enter authorName: <input type="text" data-ng-model="newAuthor.authorName" style="margin-right: 40px">
+
+                    Select books: <select id="myselection" multiple="multiple" data-ng-model="newAuthor.books" data-ng-options="b.title for b in books"></select>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="updateAuthorModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                    <h3>Enter details to update author: </h3>
+                    Enter author name: <input type="text" data-ng-model="authorToUpdate.authorName" style="margin-right: 40px" value="authorToUpdate.authorName">
+
+                    Select books: <select multiple data-ng-model="authorToUpdate.books" data-ng-options="b.title for b in books track by b.bookId"></select>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+</div>

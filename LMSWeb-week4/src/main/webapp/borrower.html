@@ -1,0 +1,87 @@
+<div class="container theme-showcase" role="main" ng-controller="borrowerController">
+
+	<div class="jumbotron" style="background-color: #337ab7 !important;">
+		<h1 align="center">Welcome Borrower</h1>
+	</div>
+
+	<div class="row">
+
+		<!-- Menu Block to the left side -->
+
+		<div class="col-sm-2" align="center" style="float: left">
+
+			<!-- Collapsed Menu -->
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								>Borrower</a>
+						</h4>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse in">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Borrower</a> 
+							<a href="" class="list-group-item" ng-click="checkOutClicked()">Check Out</a> 
+							<a href="" class="list-group-item" ng-click="returnClicked()">Return</a>
+                            <a href="" class="list-group-item" ng-click="viewClicked()">View</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+
+		</div>
+
+		<!-- End Menu Block to the left side -->
+
+
+		<!-- 	BooK Table on the right -->
+		<div class="col-lg-10" align="center" style="float: right;">
+
+            <h3 ng-if="borrower.loans.length==0">You don't have any loan!</h3>
+			<table class="table table-striped" style="text-align: center;" ng-if="borrower.loans.length!=0">
+				<tr style="text-align: center;">
+					<th style="text-align: center;">BookName</th>
+					<th style="text-align: center;">BranchName</th>
+					<th style="text-align: center;">DateOut</th>
+					<th style="text-align: center;">DueDate</th>
+					<th style="text-align: center;">DateIn</th>
+				<tr ng-repeat="l in borrower.loans">
+					<td>{{l.book.title}}</td>
+                    <td>{{l.branch.branchName}}</td>
+                    <td>{{l.dateOut}}</td>
+                    <td>{{l.dueDate}}</td>
+                    <td ng-if="l.dateIn!=null">{{l.dateIn}}</td>
+                    <td ng-if="l.dateIn==null&&showReturnButton">
+                        <button class="btn btn-sm btn-warning" confirmed-click="returnBook(l)" ng-confirm-click="Return {{l.book.title}}?">Return</button>
+                    </td>
+				</tr>
+			</table>
+		</div>
+		<!-- 	End BooK Table on the right -->
+	</div>
+    
+    <script type="text/ng-template" id="checkOutBookModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                <h3>Enter details to check out a book: </h3>
+
+                Select a branch: <select data-ng-model="selectedBookCopyBranch" data-ng-options="bc.branch.branchName for bc in bookCopies" ng-change="branchSelected()"></select>
+
+                <br />
+
+                Select a book: <select data-ng-model="selectedBookCopyBook" data-ng-options="bc.book.title for bc in bookCoiesByBranch"  ng-change="bookSelected()"></select>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+        
+</div>

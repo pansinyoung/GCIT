@@ -1,26 +1,9 @@
-<%@page import="java.util.ArrayList"%>
-<%@include file="include.html"%>
-<%@page import="com.gcit.lms.entity.*"%>
-<%@page import="com.gcit.lms.dao.*"%>
-<%@page import="com.gcit.lms.service.*"%>
-<%@page import="java.util.List"%>
-<%
-	LibrarianService service = new LibrarianService();
-	List<Branch> branches = new ArrayList<Branch>();
-	branches = service.readAllBranch();
-	
-%>
-
-
-<div class="container theme-showcase" role="main">
+<div class="container theme-showcase" role="main" ng-controller="librarianController">
 
 	<div class="jumbotron" style="background-color: #337ab7 !important;">
 		<h1 align="center">Welcome Librarian</h1>
 	</div>
 	<div class="row">
-	<%if(request.getAttribute("confMessage")!=null){ %>
-		<h3><%=request.getAttribute("confMessage")%></h3>
-		<%} %>
 
 		<div class="page-header">
 			<div class="col-md-6" align="left">
@@ -29,7 +12,6 @@
 			</div>
 		</div>
 	</div>
-
 
 	<div class="row">
 
@@ -43,14 +25,15 @@
 					<div class="panel-heading">
 						<h4 class="panel-title myCollapseItem myCollapseItem">
 							<a data-toggle="collapse" data-parent="#accordion"
-								href="#collapse1">Librarian</a>
+								href="">Librarian</a>
 						</h4>
 					</div>
 					<div id="collapse1" class="panel-collapse collapse in">
 						<div class="list-group">
 							<a class="panel-collapse collapse">Librarian</a> 
-							<a href="librarianUpdate.jsp" class="list-group-item" >Edit Branch</a> 
-							<a href="librarianAddCopies.jsp" class="list-group-item">Add Copies</a> 
+							<a href="" ng-click="editClicked()" class="list-group-item" >Edit Branch</a> 
+							<a href="" ng-click="addCopiesClicked()" class="list-group-item">Add Copies</a> 
+                            <a href="" ng-click="viewClicked()" class="list-group-item">View</a> 
 						</div>
 					</div>
 				</div>
@@ -66,82 +49,80 @@
 		<!-- 	BooK Table on the right -->
 		<div class="col-lg-10" align="center" style="float: right;">
 
-			<%if(branches==null|| branches.isEmpty()){ %>
-				<h3>No branches stored!</h3>
-			<%}else{ %>
-			<table class="table table-striped" style="text-align: center;">
+				<h3 ng-if="!branches">No branches stored!</h3>
+			<table class="table table-striped" style="text-align: center;" ng-if="branches">
 				<tr style="text-align: center;">
-					<th style="text-align: center;">#</th>
 					<th style="text-align: center;">Branch Name</th>
 					<th style="text-align: center;">Branch Address</th>
 					<th style="text-align: center;">Copies</th>
-					<!-- 					<th>Edit</th> -->
-					<!-- 					<th>Delete</th> -->
-				</tr>
-				<!-- 			<tr> -->
-				<!-- 				<td>1</td> -->
-				<!-- 				<td>asvc</td> -->
-				<%-- 				<td><button class="btn btn-xs btn-primary" href="bookupdate.jsp?authorId=<%=a.getAuthorId()%>" data-toggle="modal" data-target="#editAuthorModal">Update</button></td> --%>
-				<!-- 				<td><button class="btn btn-xs btn-primary">Delete</button></td> -->
-				<!-- 			</tr> -->
-				<%
-					for (Branch b : branches) {
-						List<BookCopies> copies = service.readCopiesByBranchId(b.getBranchId());
-				%>
-				<tr>
-					<td><%=branches.indexOf(b) + 1%></td>
-
-					<td><%=b.getBranchName()%></td>
-					
-					<td><%=b.getBranchAddr()%></td>
-					
-					<td>
-						<div class="col-sm-1">
+                    <th style="text-align: center;" ng-if="showAddCopiesButton">Add</th>
+                    <th style="text-align: center;" ng-if="showEditButton">Edit Branch</th>
+                </tr>
+                <tr ng-repeat="b in branches">
+                    <td>{{b.branchName}}</td>
+                    <td>{{b.branchAddr}}</td>
+                    
+                    <td>
+                        <div class="col-sm-1">
 							<div class="dropdown" style="width: 200px;">
 								<button class="btn btn-info dropdown-toggle" type="button"
 									data-toggle="dropdown">
-									Copies <span class="caret"></span>
+									Book Copies <span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">
-									<%
-										if (copies == null || copies.isEmpty()) {
-									%>
-									<li><a>No copies in this branch</a></li>
-									<%
-										} else {
-									%>
-									<%
-										for (BookCopies a : copies) {
-									%>
-									<li><%="BookId: "+a.getBook().getBookId()+" Num:"+a.getNoOfCopies()%></li>
-									<%
-										}
-											}
-									%>
+									<li ng-if="b.copies.length==0"><a>No copies stored</a></li>
+                                    <li ng-if="b.copies.length!=0" ng-repeat="bc in b.copies">{{bc.book.title}}: {{bc.noOfCopies}}</li>
 								</ul>
 							</div>
 						</div>
-					</td>
-					
+                    </td>
+                    
+                    <td ng-if="showAddCopiesButton"><button class="btn btn-sm btn-warning" ng-Click="addCopiesButtonClicked(b)">Add Copies</button></td>
+
+					<td ng-if="showEditButton"><button class="btn btn-sm btn-warning" ng-Click="editButtonClicked(b)">Edit</button></td>
 				</tr>
-				<%
-					}
-				%>
 			</table>
-		<%} %>
 		</div>
 		<!-- 	End BooK Table on the right -->
 	</div>
+    
+    <script type="text/ng-template" id="editBranchModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Update branch</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                <h3>Enter details to update branch: </h3>
+                Enter branch name: <input type="text" data-ng-model="branchToUpdate.branchName" style="margin-right: 40px" value="branchToUpdate.branchName">
+                
+                Enter branch Address: <input type="text" data-ng-model="branchToUpdate.branchAddr" style="margin-right: 40px" value="branchToUpdate.branchAddr">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="addCopiesModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Add book copies to branch</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                <h3>Enter details to add copies: </h3><br />
+                
+                 Select a book: <select data-ng-model="book" data-ng-options="b.title for b in books "></select>
+                
+                <br />
+                
+                Enter number of copies: <input type="text" data-ng-model="noOfCopies" style="margin-right: 40px" >
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
 </div>
-
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-	aria-labelledby="myLargeModalLabel" id="bookOps">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content"></div>
-	</div>
-</div>
-<script type="text/javascript">
-$('#bookOps').on('hidden.bs.modal', function () {
-	$("#bookOps").removeData();
-});
-</script>

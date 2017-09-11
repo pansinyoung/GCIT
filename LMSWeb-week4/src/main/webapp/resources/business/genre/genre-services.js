@@ -16,18 +16,14 @@ lmsApp.factory("genreService", function ($http) {
             return $http({
                 url: "http://localhost:8080/lms/addUpdateGenre",
                 method: "POST",
-                data: {
-                    genre: genre
-                }
+                data: genre
             });
         },
         deleteGenreService: function (genre) {
             return $http({
                 url: "http://localhost:8080/lms/deleteGenre",
                 method: "POST",
-                data: {
-                    genre: genre
-                }
+                data: genre
             });
         },
         searchGenreService: function (searchString) {
@@ -68,19 +64,19 @@ lmsApp.factory("genreService", function ($http) {
             return $http({
                 url: "http://localhost:8080/lms/viewBookGenres",
                 method: "POST",
-                data: bookId
+                data: JSON.stringify(bookId)
             }).success(function (data) {
                 result = data;
             }).then(function () {
                 return result;
             });
         },
-        selectGenreByIdService: function (genreId) {
+        selectGenreByIdService: function (genre_id) {
             var result = {};
             return $http({
                 url: "http://localhost:8080/lms/selectGenreById",
                 method: "POST",
-                data: genreId
+                data: JSON.stringify(genre_id)
             }).success(function (data) {
                 result = data;
             }).then(function () {

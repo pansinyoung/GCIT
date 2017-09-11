@@ -26,7 +26,7 @@ public class BookCopiesDAO extends BaseDAO<BookCopies> implements ResultSetExtra
 	}
 
 	public List<BookCopies> readAllBookCopies() throws SQLException{
-		return template.query("select * from tbl_book_copies", this);
+		return template.query("select * from tbl_book_copies where noOfCopies > 0", this);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class BookCopiesDAO extends BaseDAO<BookCopies> implements ResultSetExtra
 	}
 
 	public List<BookCopies> readCopiesByBranchId(int branchId) throws SQLException{
-		return template.query("select * from tbl_book_copies where branchId = ?", new Object[] {branchId}, this);
+		return template.query("select * from tbl_book_copies where branchId = ? AND noOfCopies > 0", new Object[] {branchId}, this);
 	}
 
 	public List<BookCopies> readCopiesByBookId(int bookId) throws SQLException{
@@ -63,10 +63,12 @@ public class BookCopiesDAO extends BaseDAO<BookCopies> implements ResultSetExtra
 	}
 	
 	public void addCopiesToBranch(int branchId, int bookId, int addedNumber) throws SQLException {
-		if(template.query("SELECT * FROM tbl_book_copies WHERE bookId = ? AND branchId = ?", new Object[] {bookId, branchId}, this) != null)
+		if(!template.query("SELECT * FROM tbl_book_copies WHERE bookId = ? AND branchId = ?", new Object[] {bookId, branchId}, this) .isEmpty()) {
 			template.update("UPDATE tbl_book_copies SET noOfCopies = noOfCopies + ? WHERE bookId = ? AND branchId = ?", new Object[] {addedNumber, bookId, branchId});
-		else
+		}
+		else {
 			template.update("INSERT INTO tbl_book_copies (bookId, branchId, noOfCopies) VALUES (?,?,?)", new Object[]{bookId, branchId, addedNumber});
+		}
 
 	}
 

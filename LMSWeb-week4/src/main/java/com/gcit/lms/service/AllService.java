@@ -44,7 +44,6 @@ public class AllService {
 	@RequestMapping(value = "/addUpdateBook", method = RequestMethod.POST, consumes="application/json", produces="application/json")
 	@Transactional
 	public void addUpdateBook(@RequestBody Book book){
-		System.out.println(book.getTitle());
 		int result=0;
 		List<Integer> author = new ArrayList<>();
 		for(Author a: book.getAuthors()) {
@@ -387,10 +386,42 @@ public class AllService {
 		return null;
 	}
 	
+	@RequestMapping(value = "/readAllBranches", method = RequestMethod.GET, produces="application/json")
+	public List<Branch> readAllBranches(){
+		try {
+			List<Branch> result = brdao.readAllBranch();
+			for(Branch br: result) {
+				br.setCopies(bcdao.readCopiesByBranchId(br.getBranchId()));
+				for(BookCopies bc: br.getCopies()) {
+					bc.setBook(bdao.getById(bc.getBook().getBookId()));
+				}
+				br.setLoans(ldao.getResultByBranchId(br.getBranchId()));
+			}
+			return result;		
+			} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@RequestMapping(value = "/readAllBorrower", method = RequestMethod.POST, consumes="application/json", produces="application/json")
 	public List<Borrower> readAllBorrower(@RequestBody String searchString){
 		try {
 			List<Borrower> result = bodao.readAllBorrower(searchString);
+			for(Borrower bo: result) {
+				bo.setLoans(ldao.getResultByCardNo(bo.getCardNo()));
+			}
+			return result;	
+			} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/readAllBorrowers", method = RequestMethod.GET, produces="application/json")
+	public List<Borrower> readAllBorrowers(){
+		try {
+			List<Borrower> result = bodao.readAllBorrowers();
 			for(Borrower bo: result) {
 				bo.setLoans(ldao.getResultByCardNo(bo.getCardNo()));
 			}
@@ -597,7 +628,7 @@ public class AllService {
 	public Publisher getPublisherById(@RequestBody String publisherId) {
 		try {
 			Publisher result = pdao.getById(Integer.parseInt(publisherId));
-			result.setBooks(bdao.searchByGenreId(result.getPublisherId()));
+			result.setBooks(bdao.searchByPublisherId(result.getPublisherId()));
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -647,10 +678,15 @@ public class AllService {
 	}
 
 	@RequestMapping(value = "/selectBorrowerById", method = RequestMethod.POST, consumes="application/json", produces="application/json")
-	public Borrower selectBorrowerById(@RequestBody String borrowerId) {
+	public Borrower selectBorrowerById(@RequestBody String cardNo) {
 		try {
-			Borrower bo = bodao.getById(Integer.parseInt(borrowerId));
+			Borrower bo = bodao.getById(Integer.parseInt(cardNo));
+			if(bo!=null)
 			bo.setLoans(ldao.getResultByCardNo(bo.getCardNo()));
+			for(Loan l: bo.getLoans()) {
+				l.setBook(bdao.getById(l.getBook().getBookId()));
+				l.setBranch(brdao.getById(l.getBranch().getBranchId()));
+			}
 			return bo;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -698,11 +734,27 @@ public class AllService {
 		return null;
 	}
 	
+	@RequestMapping(value = "/selectAllCopies", method = RequestMethod.GET, produces="application/json")
+	public List<BookCopies> selectAllCopies() {
+		try {
+			List<BookCopies> result = bcdao.readAllBookCopies();
+			for(BookCopies bc : result) {
+				bc.setBook(bdao.getById(bc.getBook().getBookId()));
+				bc.setBranch(brdao.getById(bc.getBranch().getBranchId()));
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@RequestMapping(value = "/bookCheck", method = RequestMethod.POST, consumes="application/json", produces="application/json")
 	@Transactional
-	public void bookCheck(@RequestBody BookCopies bc) {
+	public void bookCheck(@RequestBody Loan loan) {
 		try {
-			bcdao.bookCheckOut(bc.getBranch().getBranchId(), bc.getBook().getBookId());
+			bcdao.bookCheckOut(loan.getBranch().getBranchId(), loan.getBook().getBookId());
+			ldao.bookCheckOut(loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -710,9 +762,10 @@ public class AllService {
 	
 	@RequestMapping(value = "/bookReturn", method = RequestMethod.POST, consumes="application/json", produces="application/json")
 	@Transactional
-	public void bookReturn(@RequestBody BookCopies bc) {
+	public void bookReturn(@RequestBody Loan loan) {
 		try {
-			bcdao.bookReturn(bc.getBranch().getBranchId(), bc.getBook().getBookId());
+			bcdao.bookReturn(loan.getBranch().getBranchId(), loan.getBook().getBookId());
+			ldao.bookReturn(loan);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

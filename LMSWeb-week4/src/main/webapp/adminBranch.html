@@ -1,0 +1,218 @@
+<div class="container theme-showcase" role="main" ng-controller="listBranchController">
+
+	<div class="jumbotron" style="background-color: #337ab7 !important;">
+		<h1 align="center">Welcome Administrater</h1>
+	</div>
+	<div class="page-header">
+		<div class="col-md-6" align="left">
+			<h1 style="font-size: 24px !important;">Please select your
+				action:</h1>
+		</div>
+
+	</div>
+	<div class="col-md-6" align="right">
+        <div class="row">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchString" placeholder="Search" ng-change="searchBranch()">
+            </div>
+        </div>
+	</div>
+
+		<!-- Start Menu Block to the left side -->
+
+    <div class="row">
+
+		<div class="col-sm-2" align="center" style="float: left;">
+
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion" data-target="#collapse1">Book</a>
+						</h4>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Book</a> 
+							<a ng-Click="goToBook()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToBook()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToBook()" class="list-group-item">Update</a> 
+							<a ng-Click="goToBook()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse2">Author</a>
+						</h4>
+					</div>
+					<div id="collapse2" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Author</a> 
+							<a ng-Click="goToAuthor()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToAuthor()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToAuthor()" class="list-group-item">Update</a> 
+							<a ng-Click="goToAuthor()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse3">Publisher</a>
+						</h4>
+					</div>
+					<div id="collapse3" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Publisher</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">Update</a> 
+							<a ng-Click="goToPublisher()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse4">Branch</a>
+						</h4>
+					</div>
+					<div id="collapse4" class="panel-collapse collapse in">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Branch</a> 
+                            <a ng-click="addBranchClicked()" class="list-group-item" >Add</a> 
+							<a ng-Click="deleteBranchClicked()" class="list-group-item">Delete</a> 
+							<a ng-Click="updateBranchClicked()" class="list-group-item">Update</a> 
+							<a ng-Click="viewBranchClicked()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse5">Borrower</a>
+						</h4>
+					</div>
+					<div id="collapse5" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Borrower</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">Update</a> 
+							<a ng-Click="goToBorrower()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse6">Genre</a>
+						</h4>
+					</div>
+					<div id="collapse6" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Genre</a> 
+							<a ng-Click="goToGenre()" class="list-group-item" >Add</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">Delete</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">Update</a> 
+							<a ng-Click="goToGenre()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info">
+					<div class="panel-heading">
+						<h4 class="panel-title myCollapseItem">
+							<a data-toggle="collapse" data-parent="#accordion"
+								data-target="#collapse7">Loan</a>
+						</h4>
+					</div>
+					<div id="collapse7" class="panel-collapse collapse">
+						<div class="list-group">
+							<a class="panel-collapse collapse">Loan</a> 
+							<a ng-Click="goToLoan()" class="list-group-item">Override Due</a> 
+							<a ng-Click="goToLoan()" class="list-group-item">View</a>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+
+		<!-- End Menu Block to the left side -->
+
+
+		<!-- 	BooK Table on the right -->
+		<div class="col-lg-10" align="center" style="float: right;">
+
+			<table class="table table-striped" style="text-align: center;">
+				<tr style="text-align: center;">
+					<th style="text-align: center;">#</th>
+					<th style="text-align: center;">Branch Name</th>
+					<th style="text-align: center;">Addrress</th>
+					<th style="text-align: center;" ng-if="showDeleteButton">Delete</th>
+					<th style="text-align: center;" ng-if="showUpdateButton">Update</th>
+				</tr>
+                <tr ng-repeat="b in branches | startFrom: pagination.page * pagination.perPage | limitTo: pagination.perPage">
+                    <td>{{$index+1}}</td>
+                    <td>{{b.branchName}}</td>
+                    <td>{{b.branchAddr}}</td>
+					<td ng-if="showDeleteButton"><button class="btn btn-sm btn-danger" confirmed-click="deleteBranchButtonClicked(b.branchId)" ng-confirm-click="Delete {{b.branchName}}?">Delete</button></td>
+					<td ng-if="showUpdateButton"><button class="btn btn-sm btn-warning" ng-Click="updateBranchButtonClicked(b.branchId)">Update</button></td>
+				</tr>
+			</table>
+
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+        			<li ng-repeat="n in [] | range: pagination.numPages" ng-class="{active: n == pagination.page}"><a href="" ng-click="pagination.toPageId(n)">{{n + 1}}</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- 	End BooK Table on the right -->
+	</div>
+    
+       <script type="text/ng-template" id="addBranchModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Add branch</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                <h3>Enter details to add branch: </h3>
+                Enter branch name: <input type="text" data-ng-model="newBranch.branchName" style="margin-right: 40px">
+
+                Enter branch Address: <input type="text" data-ng-model="newBranch.branchAddr" style="margin-right: 40px">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="updateBranchModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Update branch</h3>
+        </div>
+        <div class="modal-body">
+            <form name="myForm">
+                <h3>Enter details to update branch: </h3>
+                Enter branch name: <input type="text" data-ng-model="branchToUpdate.branchName" style="margin-right: 40px" value="branchToUpdate.branchName">
+                
+                Enter branch Address: <input type="text" data-ng-model="branchToUpdate.branchAddr" style="margin-right: 40px" value="branchToUpdate.branchAddr">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+</div>

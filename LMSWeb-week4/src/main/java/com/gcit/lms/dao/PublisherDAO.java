@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Publisher;
 import com.mysql.cj.api.jdbc.Statement;
 
@@ -44,15 +45,27 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 				return ps;
 			}
 		}, holder);
+		if (!publisher.getBooks().isEmpty()) {
+			for (Book b : publisher.getBooks()) {
+				template.update("UPDATE tbl_book SET pubId = ? WHERE bookId = ?",
+						new Object[] { holder.getKey().intValue(), b.getBookId() });
+			} 
+		}
 		return holder.getKey().intValue();
 	}
 	
 	public void updatePublisher(Publisher publisher) throws SQLException {
 		template.update("UPDATE `library`.`tbl_publisher` SET publisherName = ?, publisherAddress = ?, publisherPhone = ? WHERE publisherId = ?", new Object[] {publisher.getPublisherName(), publisher.getPublisherAddr(), publisher.getPublisherPhone(), publisher.getPublisherId()});
+		if (!publisher.getBooks().isEmpty()) {
+			for (Book b : publisher.getBooks()) {
+				template.update("UPDATE tbl_book SET pubId = ? WHERE bookId = ?",
+						new Object[] { publisher.getPublisherId(), b.getBookId() });
+			} 
+		}
 	}
 	
 	public void deletePublisher(Publisher publisher) throws SQLException {
-		template.update("UPDATE `library`.`tbl_book` SET publisherId = NULL WHERE publisherId = ?", new Object[] {publisher.getPublisherId()} );
+		template.update("UPDATE `library`.`tbl_book` SET pubId = NULL WHERE pubId = ?", new Object[] {publisher.getPublisherId()} );
 		template.update("DELETE FROM `library`.`tbl_publisher` WHERE publisherId = ?", new Object[] {publisher.getPublisherId()});
 	}
 	
