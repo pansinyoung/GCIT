@@ -49,8 +49,8 @@ public class BranchDAO extends BaseDAO<Branch> implements ResultSetExtractor<Lis
 		template.update("UPDATE `library`.`tbl_library_branch` SET branchName = ?, branchAddress = ? WHERE branchId = ?", new Object[] {branch.getBranchName(), branch.getBranchAddr(), branch.getBranchId()});
 	}
 	
-	public void deleteBranch(Branch branch) throws SQLException {
-		template.update("DELETE FROM `library`.`tbl_library_branch` WHERE branchId = ?", new Object[] {branch.getBranchId()});
+	public void deleteBranch(Integer branch) throws SQLException {
+		template.update("DELETE FROM `library`.`tbl_library_branch` WHERE branchId = ?", new Object[] {branch});
 	}
 	
 	public Integer getAllCount(String searchString) throws SQLException{

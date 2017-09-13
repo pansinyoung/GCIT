@@ -47,9 +47,9 @@ public class GenreDAO extends BaseDAO<Genre> implements ResultSetExtractor<List<
 		template.update("UPDATE `library`.`tbl_genre` SET genre_name = ? WHERE genre_id = ?", new Object[] {genre.getGenre_name(), genre.getGenre_id()});
 	}
 	
-	public void deleteGenre(Genre genre) throws SQLException {
-		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genre.getGenre_id()});
-		template.update("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre.getGenre_id()});
+	public void deleteGenre(Integer genre) throws SQLException {
+		template.update("DELETE FROM `library`.`tbl_book_genres` WHERE genre_id = ?", new Object[] {genre});
+		template.update("DELETE FROM `library`.`tbl_genre` WHERE genre_id = ?", new Object[] {genre});
 	}
 	
 	public List<Genre> readAllGenre(String searchString) throws SQLException{

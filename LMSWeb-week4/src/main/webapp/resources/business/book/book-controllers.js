@@ -41,7 +41,7 @@ lmsApp.controller("listBookController", function ($scope, $http, $window, bookSe
 
         modalInstance.result.then(function (newBook) {
             $scope.newBook = newBook;
-            bookService.addUpdateBookService(newBook).then(function(){
+            bookService.addBookService(newBook).then(function(){
                 $window.alert('add successfully!');
                 $scope.loadData();
             });
@@ -56,7 +56,7 @@ lmsApp.controller("listBookController", function ($scope, $http, $window, bookSe
     };
     
     $scope.deleteBookButtonClicked = function(bookId){
-        bookService.deleteBookService({'bookId': bookId}).then(function(){
+        bookService.deleteBookService(bookId).then(function(){
             $window.alert('delete successfully!');
             $scope.loadData();
             $scope.showDeleteButton = true;
@@ -101,7 +101,7 @@ lmsApp.controller("listBookController", function ($scope, $http, $window, bookSe
 
         anotherModalInstance.result.then(function (bookToUpdate) {
             $scope.bookToUpdate = bookToUpdate;
-            bookService.addUpdateBookService(bookToUpdate).then(function(){
+            bookService.updateBookService(bookToUpdate).then(function(){
                 $window.alert('update successfully!');
                 $scope.loadData();
             });

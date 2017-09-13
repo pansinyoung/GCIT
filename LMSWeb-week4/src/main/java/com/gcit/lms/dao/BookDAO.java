@@ -36,10 +36,10 @@ public class BookDAO extends BaseDAO<Book> implements ResultSetExtractor<List<Bo
 		template.update("update tbl_book set title = ?, pubId = ? where bookId = ?", new Object[] {book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId()});
 	}
 	
-	public void deleteBook(Book book) throws SQLException{
-		template.update("delete from tbl_book where bookId = ?", new Object[]{book.getBookId()});
-		template.update("delete from tbl_book_authors where bookId = ?", new Object[]{book.getBookId()});
-		template.update("delete from tbl_book_genres where bookId = ?", new Object[]{book.getBookId()});
+	public void deleteBook(Integer book) throws SQLException{
+		template.update("delete from tbl_book where bookId = ?", new Object[]{book});
+		template.update("delete from tbl_book_authors where bookId = ?", new Object[]{book});
+		template.update("delete from tbl_book_genres where bookId = ?", new Object[]{book});
 	}
 
 	public List<Book> readAllBooks(String searchString) throws SQLException{

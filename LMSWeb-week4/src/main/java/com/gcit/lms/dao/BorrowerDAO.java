@@ -51,8 +51,8 @@ public class BorrowerDAO extends BaseDAO<Borrower> implements ResultSetExtractor
 		template.update("UPDATE `library`.`tbl_borrower` SET name = ?, address = ?, phone = ? WHERE cardNo = ?", new Object[] {borrower.getName(), borrower.getAddress(), borrower.getPhone(), borrower.getCardNo()});
 	}
 	
-	public void deleteBorrower(Borrower borrower) throws SQLException {
-		template.update("DELETE FROM `library`.`tbl_borrower` WHERE cardNo = ?", new Object[] {borrower.getCardNo()});
+	public void deleteBorrower(Integer borrower) throws SQLException {
+		template.update("DELETE FROM `library`.`tbl_borrower` WHERE cardNo = ?", new Object[] {borrower});
 	}
 	
 	public List<Borrower> readAllBorrower(String searchString) throws SQLException{

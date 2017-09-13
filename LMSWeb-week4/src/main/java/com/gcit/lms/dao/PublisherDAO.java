@@ -64,9 +64,9 @@ public class PublisherDAO extends BaseDAO<Publisher> implements ResultSetExtract
 		}
 	}
 	
-	public void deletePublisher(Publisher publisher) throws SQLException {
-		template.update("UPDATE `library`.`tbl_book` SET pubId = NULL WHERE pubId = ?", new Object[] {publisher.getPublisherId()} );
-		template.update("DELETE FROM `library`.`tbl_publisher` WHERE publisherId = ?", new Object[] {publisher.getPublisherId()});
+	public void deletePublisher(Integer publisher) throws SQLException {
+		template.update("UPDATE `library`.`tbl_book` SET pubId = NULL WHERE pubId = ?", new Object[] {publisher} );
+		template.update("DELETE FROM `library`.`tbl_publisher` WHERE publisherId = ?", new Object[] {publisher});
 	}
 	
 	public List<Publisher> readAllPublisher(String searchString) throws SQLException{

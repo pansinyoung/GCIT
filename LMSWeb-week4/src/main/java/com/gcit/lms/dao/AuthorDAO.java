@@ -47,8 +47,8 @@ public class AuthorDAO extends BaseDAO<Author> implements ResultSetExtractor<Lis
 		template.update("UPDATE `library`.`tbl_author` SET authorName = ? WHERE authorId = ?", new Object[] {author.getAuthorName(), author.getAuthorId()});
 	}
 	
-	public void deleteAuthor(Author author) throws SQLException {
-		template.update("DELETE FROM `library`.`tbl_author` WHERE authorId = ?", new Object[] {author.getAuthorId()});
+	public void deleteAuthor(Integer author) throws SQLException {
+		template.update("DELETE FROM `library`.`tbl_author` WHERE authorId = ?", new Object[] {author});
 	}
 	
 	public List<Author> readAllAuthor(String searchString) throws SQLException{
